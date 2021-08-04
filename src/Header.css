@@ -1,0 +1,25 @@
+.lmulogo {
+    width: 250px;
+    height: 120px;
+    margin-right: 20px;
+}
+
+.bwlogo {
+    width: 300;
+    height: 100px;
+    object-fit: cover;
+}
+
+.title {
+    font-family: 'ABeeZee';
+    color: black;
+    margin: 50px
+  }
+  
+  .body {
+    font-family: 'Myriad Pro Regular';
+    color: black;
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+  
