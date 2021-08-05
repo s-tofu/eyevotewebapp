@@ -1,7 +1,8 @@
 .title {
     font-family: 'ABeeZee';
     color: black;
-    margin: 50px
+    margin-left: 50px;
+    margin-bottom: 30px;
   }
   
   .body {
@@ -10,4 +11,15 @@
     margin-left: 50px;
     margin-right: 50px;
   }
+
+  .button {
+    margin-left: 50px;
+    border-color: none;
+    color: gray;
+    text-align: center;
+    font-size: 16px;
+    width: 200px;
+    height: 50px;
+  }
+  
   
