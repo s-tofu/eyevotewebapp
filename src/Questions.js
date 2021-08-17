@@ -28,7 +28,9 @@ const Questions = () => {
                     What is your gender? <p></p>
                     <input type="radio" value="Male" name="gender"/> Male<p></p>
                     <input type="radio" value="Female" name="gender"/> Female<p></p>
-                    <input type="radio" value="Other" name="gender"/> Other<p></p>
+                    <input type="radio" value="Non-binary" name="gender"/> Non-binary<p></p>
+                    <input type="radio" value="Prefer-not-to-say" name="gender"/> Prefer not to say<p></p>
+                    <input type="radio" value="Prefer-to-self-describe" name="gender"/> Prefer to self describe: <input type="text" age="age" />
                 </label>
                 <p></p>
                 <label>
@@ -45,7 +47,6 @@ const Questions = () => {
 
             <p className='body'>By clicking on "Start eye-tracking", we will start the Study. You will first be asked to calibrate the webcam eyetracker.
                 Please follow the instructions of the calibration and continue with the study afterwards</p>
-            <button className="button"><Link to="/">Go back</Link></button>
             <button className="button" onClick={startTracking}>Start eye-tracking</button>
         </div>
     )

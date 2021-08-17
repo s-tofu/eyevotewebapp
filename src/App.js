@@ -3,6 +3,7 @@ import Header from './Header';
 import useScript from './useScript'
 import Consent from './Consent';
 import Questions from './Questions';
+import Study from './Eyevote.js';
 import './App.css'
 import {
   BrowserRouter as Router,
@@ -33,17 +34,15 @@ function App() {
       </p>
       <p className="body">This study will take approximately 15 minutes.
       </p>
-      <p className="body">Please read the <Link to="/consent">Consent Form</Link> first. Only after reading the Consent Form, please click on Start. We would then like to ask you to answer some demographic questions.
+      <p className="body">After clicking Start, you will be led to the Consent Form first. We would then like to ask you to answer some demographic questions.
       </p>
-      <button className="start-button"><Link to="/questions">Start*</Link></button>
-      <p className="note">*By pressing “Start”, I assure that I have read and understood the above consent and thus was informed about my rights. I certify that I agree to the processing of my data
-        by the LMU Munich and Bundeswehr University Munich.
-      </p>
+      <button className="start-button"><Link to="/consent">Start</Link></button>
       <Switch>
           <Route path="/consent" component={Consent}>
           </Route>
           <Route path="/questions" component={Questions}></Route>
-      </Switch>
+          <Route path="/study" component={Study}></Route>
+       </Switch>
     </div>
     </Router>
   );
