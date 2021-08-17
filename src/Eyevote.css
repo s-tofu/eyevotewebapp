@@ -1,6 +1,6 @@
 .Eyevote {
     background-color: dimgray;
-    margin: none;
+    text-align: center;
 
 }
 
@@ -21,6 +21,7 @@
     border-color: none;
     color: gray;
     text-align: center;
+    align-items: center;
     font-size: 16px;
     width: 200px;
     height: 50px;
