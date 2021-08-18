@@ -46,7 +46,7 @@ const EyeVote = () => {
     const QuestionScreen = () => {
         return (
             <div className='Eyevote'>
-                 <h1 className='question'>What is your favorite ice cream?</h1>
+                <h1 className='question'>What is your favorite ice cream?</h1>
                 <h1 className='answer' id="answerOne">Vanille</h1>
                 <h1 className='answer' id="answerTwo">Chocolate</h1>
                 <h1 className='answer'>Strawberry</h1>

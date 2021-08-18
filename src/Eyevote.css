@@ -1,6 +1,8 @@
 .Eyevote {
     background: dimgray;
     text-align: center;
+    height: 1000px;
+    padding: 20px;
 }
 
 .header {
