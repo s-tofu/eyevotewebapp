@@ -11,11 +11,12 @@ const EyeVote = () => {
 
     function giveMeYourShit(result) {
         console.log(result)
+        document.getElementById('dotLookAt').style.left =`${result.docX}px`;
+        document.getElementById('dotLookAt').style.top =`${result.docY}px`;
     }
     
     return (
             <div className='Eyevote'>
-            <p className='Eyevote'>Hello World</p>
              <h1 className='header'>EyeVote Remote</h1>
              <p className='instructions'>You will be presented 10 questions</p>
              <p className='instructions'>Please gaze at the answers you want to select</p>

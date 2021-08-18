@@ -7,6 +7,6 @@ import Questions from './Questions'
 
 
 ReactDOM.render(
-  <App />,
+  <EyeVote />,
   document.getElementById('root')
 )
