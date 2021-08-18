@@ -1,28 +1,30 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Header from './Header';
 import useScript from './useScript'
 import Consent from './Consent';
 import Questions from './Questions';
 import Study from './Eyevote.js';
 import './App.css'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
 
 function App() {
-  useScript('https://api.gazerecorder.com/GazeCloudAPI.js')
-  const startTracking = () => {
-    window.GazeCloudAPI.StartEyeTracking()
-  }
-  const stopTracking = () => {
-    window.GazeCloudAPI.StopEyeTracking()
+  const [page, setPage] = useState('home')
+  const toPage = (page) => (event) => {
+    event.preventDefault()
+    setPage(page)
   }
 
+  const content = () => {
+    if (page === 'consent') {
+      return <Consent />
+    } else if (page === 'questions') {
+      return <Questions />
+    }
+  }
+
+  const padding = {
+    padding: 5
+  }
   return (
-    <Router>
     <div className="App">
       <Header></Header>
       <h1 className="title">Remote Eye-Tracking Study: EyeVote
@@ -36,15 +38,11 @@ function App() {
       </p>
       <p className="body">After clicking Start, you will be led to the Consent Form first. We would then like to ask you to answer some demographic questions.
       </p>
-      <button className="start-button"><Link to="/consent">Start</Link></button>
-      <Switch>
-          <Route path="/consent" component={Consent}>
-          </Route>
-          <Route path="/questions" component={Questions}></Route>
-          <Route path="/study" component={Study}></Route>
-       </Switch>
+      <button className="start-button"><a href="" onClick={toPage('consent')} style={padding}>
+          Start
+        </a></button>
+       {content()}
     </div>
-    </Router>
   );
 }
 

@@ -1,6 +1,6 @@
 .Eyevote {
     background-color: dimgray;
-    margin: none;
+    text-align: center;
 
 }
 
@@ -21,8 +21,17 @@
     border-color: none;
     color: gray;
     text-align: center;
+    align-items: center;
     font-size: 16px;
     width: 200px;
     height: 50px;
+  }
+
+.dot {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: green;
+    border-radius: 100%;
   }
   

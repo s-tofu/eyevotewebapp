@@ -1,19 +1,25 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Header from './Header'
 import './Questions.css'
 import useScript from './useScript'
-import {
-    Link
-  } from "react-router-dom";
+import EyeVote from './Eyevote';
 
 const Questions = () => {
-    useScript('https://api.gazerecorder.com/GazeCloudAPI.js')
-    const startTracking = () => {
-    window.GazeCloudAPI.StartEyeTracking()
-     }
-    const stopTracking = () => {
-    window.GazeCloudAPI.StopEyeTracking()
+    const [page, setPage] = useState('home')
+    const toPage = (page) => (event) => {
+      event.preventDefault()
+      setPage(page)
     }
+  
+    const content = () => {
+     if (page === 'eyevote') {
+        return <EyeVote />
+      }
+    }
+
+  const padding = {
+    padding: 5
+  }
     return (
         <div className='Questions'>
             <Header></Header>
@@ -47,7 +53,9 @@ const Questions = () => {
 
             <p className='body'>By clicking on "Start eye-tracking", we will start the Study. You will first be asked to calibrate the webcam eyetracker.
                 Please follow the instructions of the calibration and continue with the study afterwards</p>
-            <button className="button" onClick={startTracking}>Start eye-tracking</button>
+            <button className="button" ><a href="" onClick={toPage('eyevote')} style={padding}>Start
+        </a></button>
+        {content()}
         </div>
     )
 }

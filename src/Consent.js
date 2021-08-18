@@ -1,11 +1,28 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Header from './Header'
+import Questions from './Questions'
 import './Consent.css'
 import {
     Link
   } from "react-router-dom";
+import { render } from '@testing-library/react';
 
 const Consent = () => {
+    const [page, setPage] = useState('home')
+  const toPage = (page) => (event) => {
+    event.preventDefault()
+    setPage(page)
+  }
+
+  const content = () => {
+   if (page === 'questions') {
+      return <Questions />
+    }
+  }
+
+  const padding = {
+    padding: 5
+  }
     return (
         <div className='consent'>
             <Header></Header>
@@ -44,10 +61,13 @@ const Consent = () => {
                     <p></p>
                 </li>
             </ol>
-            <button className='button'><Link to="/questions">I understand</Link></button>
+            <button className='button'><a href="" onClick={toPage('questions')} style={padding}>
+          I understand
+        </a></button>
             <p className="note">*By pressing “I understand”, I assure that I have read and understood the above consent and thus was informed about my rights. I certify that I agree to the processing of my data
                 by the LMU Munich and Bundeswehr University Munich.
             </p>
+            {content()}
         </div>
     )
 }
