@@ -1,15 +1,17 @@
 .Eyevote {
     background: dimgray;
-    text-align: center;
+    font-family: "Microsoft Sans Serif";
     height: 1000px;
     padding: 20px;
 }
 
 .header {
+    position: absolute;
     color: white;
-    text-align: center;
-    font-size: 40pt;
+    font-size: 60pt;
     margin: 20pt;
+    top: 500px;
+    left: 500px; 
 }
 
 .instructions {
@@ -25,12 +27,31 @@
     margin: 20pt;
 }
 
-.answer {
+.answerOne {
+    position: absolute;
     color: white;
     font-size: 40pt;
     margin: 20pt;
-    top: 10px;
-    left: 20px;
+    top: 350px;
+    left: 350px;
+}
+
+.answerTwo {
+    position: absolute;
+    color: white;
+    font-size: 40pt;
+    margin: 20pt;
+    top: 600px;
+    left: 1300px;
+}
+
+.answerThree {
+    position: absolute;
+    color: white;
+    font-size: 40pt;
+    margin: 20pt;
+    top: 450px;
+    left: 1200px;
 }
 
 .button {
