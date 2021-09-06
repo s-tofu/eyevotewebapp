@@ -53,9 +53,20 @@
     position: absolute;
     color: white;
     font-size: 40pt;
-    margin: 20pt;
-    top: 450px;
+    top: 250px;
     left: 1200px;
+    animation-name: diagonal;
+    animation-duration: 8s;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;
+}
+
+@keyframes diagonal {
+    from {top: 250px; left: 1200px}
+    to {top: 700px; left: 700px}
+  }
+
+@keyframes circular {
 }
 
 .button {
