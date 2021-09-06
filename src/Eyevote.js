@@ -8,7 +8,7 @@ const EyeVote = () => {
 
     // State to show Question, shows StartScreen on State zero
     const[question, setQuestion] = useState('1')
-    const [flip, setFlip] = useState(false)
+    // const [flip, setFlip] = useState(false)
 
     // This attribute is set to true if an answer was selected
     var answerOne = false;
@@ -28,23 +28,17 @@ const EyeVote = () => {
     var corAnswerOne
     var corAnswerTwo
     var corAnswerThree
+    var corAnswerOne_x
+    var corAnswerOne_y
+    var corAnswerTwo_x
+    var corAnswerTwo_y
+    var corAnswerThree_x
+    var corAnswerThree_y
 
     //On Load 
     var presentUser = true;
     var logLabelPosition = [];
     var logGazePosition = [];
-
-    // Style of animation
-    const props = useSpring(
-        { 
-            to: { x: 1, y: 1 }, 
-            from: { x: 350, y: 350 }, 
-            reset: true,
-            reverse: flip,
-            //config:{mass:1, tension:200, friction:200},
-            onRest: () => setFlip(!flip) 
-        })
-
 
     // Question prompts
 
@@ -80,7 +74,9 @@ const EyeVote = () => {
     }
 
     function performMovement() {
+                  
     }
+    
 
     // calculates Correlation
     function calculateCorrelation() {
@@ -116,6 +112,10 @@ const EyeVote = () => {
 
         // calculate the correlation
         const correlation = calculateCorrelation(x, y);
+
+        corAnswerOne = corAnswerOne_x + corAnswerOne_y;
+        corAnswerTwo = corAnswerTwo_x + corAnswerTwo_y;
+        corAnswerThree = corAnswerThree_x + corAnswerThree_y;
 
         if ((answerOne === false) && (answerTwo === false) && (answerThree === false))
                     {
@@ -157,7 +157,6 @@ const EyeVote = () => {
         return (
             <div className='Eyevote'>
                  <h1 className='header'>EyeVote Remote</h1>
-                 <animated.div style={props}><label className='answerOne' id="answerOne">Vanille</label></animated.div>
                  <p className='instructions'>We will start with a calibration.<p></p>After calibration you will be presented 10 questions. <p></p>Please gaze at the answers you want to select.</p>
                  <button className='button' onClick={() => {start(); setQuestion('1');}}>Start eye tracking</button>
             </div>
@@ -175,7 +174,7 @@ const EyeVote = () => {
         return (
             <div className='Eyevote'>
                 <h1 className='question' id="questionPrompt">What is your favorite ice cream?</h1>
-                <animated.div style={props}><label className='answerOne' id="answerOne">Vanille</label></animated.div>
+                <label className='answerOne' id="answerOne">Vanille</label>
                 <label className='answerTwo' id="answerTwo">Chocolate</label>
                 <label className='answerThree' id="answerThree">Strawberry</label>
             </div>
