@@ -2,13 +2,9 @@ import React, {useState} from 'react'
 import Header from './Header'
 import Questions from './Questions'
 import './Consent.css'
-import {
-    Link
-  } from "react-router-dom";
-import { render } from '@testing-library/react';
 
 const Consent = () => {
-    const [page, setPage] = useState('home')
+  const [page, setPage] = useState('consent')
   const toPage = (page) => (event) => {
     event.preventDefault()
     setPage(page)

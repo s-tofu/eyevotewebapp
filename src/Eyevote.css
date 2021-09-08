@@ -1,27 +1,91 @@
 .Eyevote {
-    background-color: dimgray;
-    text-align: center;
-
+    background: dimgray;
+    font-family: "Microsoft Sans Serif";
+    height: 904pt;
+    width: 1604pt;
+    padding: 20px;
 }
 
 .header {
+    position: absolute;
+    color: white;
+    font-size: 60pt;
+    margin: 20pt;
+    top: 300px;
+    left: 600px; 
+}
+
+.instructions {
+    position: absolute;
     color: white;
     text-align: center;
+    font-size: 20pt;
+    top: 400px;
+    left: 620px;
+}
+
+.question {
+    color: white;
+    text-align: left;
     font-size: 40pt;
     margin: 20pt;
 }
 
-.instructions {
+.answerOne {
+    position: absolute;
     color: white;
-    text-align: center;
-    font-size: 20pt;
+    font-size: 40pt;
+    margin: 20pt;
+    top: 350px;
+    left: 350px;
+    animation: circular 10s linear infinite;
+    animation-direction: alternate;
+}
+
+.answerTwo {
+    position: absolute;
+    color: white;
+    font-size: 40pt;
+    margin: 20pt;
+    top: 600px;
+    left: 1300px;
+    animation: zigzag 10s linear infinite;
+}
+
+.answerThree {
+    position: absolute;
+    color: white;
+    font-size: 40pt;
+    top: 250px;
+    left: 1200px;
+    animation-name: diagonal;
+    animation-duration: 8s;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;
+    animation-timing-function: linear;
+}
+
+@keyframes diagonal {
+    from {top: 250px; left: 1200px}
+    to {top: 700px; left: 700px}
+  }
+
+@keyframes circular {
+    from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+}
+
+@keyframes zigzag {
+    from {top: 700px; left:1300px}
+    to {top: 700px; left: 200px}
 }
 
 .button {
+    position: absolute;
     border-color: none;
     color: gray;
-    text-align: center;
-    align-items: center;
+    top: 580px;
+    left: 760px;
     font-size: 16px;
     width: 200px;
     height: 50px;
