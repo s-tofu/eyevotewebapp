@@ -8,6 +8,7 @@ const EyeVote = () => {
 
     // State to show Question, shows StartScreen on State zero
     const[question, setQuestion] = useState('0')
+    const[calibrationDone, setCalibrationDone] = useState('0')
     // State for Question undo
     const[undo, setUndo] = useState('0')
 
@@ -80,6 +81,7 @@ const EyeVote = () => {
         
         // Use Gaze 
         window.GazeCloudAPI.OnResult = PlotGaze
+        setCalibrationDone('1')
     }
 
     // Handle Gaze results
@@ -89,8 +91,6 @@ const EyeVote = () => {
 
         gaze_x = result.docX;
         gaze_y = result.docY;
-
-        console.log("gazex: " + result.docX +" gazey:"+ result.docY)
     }
 
     // calculates Correlation
@@ -110,19 +110,19 @@ const EyeVote = () => {
         answerThree_y = answerThree_rect.top;
 
         // console log the answers 
-        console.log("AnswerOne x: "+ answerOne_x + " y:" + answerOne_y)
-        console.log("AnswerTwo x: "+ answerTwo_x + " y:" + answerTwo_y)
-        console.log("AnswerThree x: "+ answerThree_x + " y:" + answerThree_y)
+        //console.log("AnswerOne x: "+ answerOne_x + " y:" + answerOne_y)
+        //console.log("AnswerTwo x: "+ answerTwo_x + " y:" + answerTwo_y)
+        //console.log("AnswerThree x: "+ answerThree_x + " y:" + answerThree_y)
 
         // constantly push the positions into the position arrays after each second
-            logLabelPositionOne_x.push(answerOne_x);
-            logLabelPositionOne_y.push(answerOne_y);
-            logLabelPositionTwo_x.push(answerTwo_x)
-            logLabelPositionTwo_y.push(answerTwo_y)
-            logLabelPositionThree_x.push(answerThree_x)
-            logLabelPositionThree_y.push(answerThree_y)
-            logGazePosition_x.push(gaze_x)
-            logGazePosition_y.push(gaze_y)
+        logLabelPositionOne_x.push(answerOne_x);
+        logLabelPositionOne_y.push(answerOne_y);
+        logLabelPositionTwo_x.push(answerTwo_x)
+        logLabelPositionTwo_y.push(answerTwo_y)
+        logLabelPositionThree_x.push(answerThree_x)
+        logLabelPositionThree_y.push(answerThree_y)
+        logGazePosition_x.push(gaze_x)
+        logGazePosition_y.push(gaze_y)
 
         // calculate the correlation
         corAnswerOne_x = calculateCorrelation(logLabelPositionOne_x, logGazePosition_x);
@@ -169,7 +169,15 @@ const EyeVote = () => {
                     }
 
     }
+    useEffect(() => {
+        if(calibrationDone==='1') {
+        const interval = setInterval(() => {
+            calculateCorrelation();
+        }, 1000);
+    }
+    }, [])
     
+
 
     // First screen 
     const StartScreen = () => {
@@ -184,11 +192,6 @@ const EyeVote = () => {
 
     // Question screen
     const QuestionScreen = () => {
-        useEffect(() => {
-            return () => {
-                calculateCorrelation();
-              }
-        }, gaze_x)
         return (
             <div className='Eyevote'>
                 <h1 className='question' id="questionPrompt">What is your favorite ice cream?</h1>

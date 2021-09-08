@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import Header from './Header';
-import Consent from './Consent';
 import Questions from './Questions';
 import Home from './Home'
 import Study from './Eyevote.js';
@@ -15,7 +14,7 @@ function App() {
 
   const content = () => {
     if (page === 'consent') {
-      return Consent()
+      return (Consent());
     } else if (page === 'questions') {
       return <Questions />
     } else if (page === 'home') {
