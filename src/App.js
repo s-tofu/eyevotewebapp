@@ -1,10 +1,14 @@
 import React, {useState} from 'react'
 import Header from './Header';
 import './App.css'
+import EyeVote from './Eyevote';
 
 function App() {
   const [page, setPage] = useState('home')
-  console.log(page)
+  const toPage = (page) => (event) => {
+    event.preventDefault()
+    setPage(page)
+  }
 
   const content = () => {
     if (page === 'consent') {
@@ -14,6 +18,9 @@ function App() {
     } else if (page === 'home') {
       return (Home());
     }
+    if (page === 'eyevote') {
+      return <EyeVote />
+    }
   }
 
   const padding = {
@@ -21,6 +28,7 @@ function App() {
   }
 
   const Home = () => {
+    console.log("current page: ", page)
     return(
         <div className="App">
         <Header></Header>
@@ -35,7 +43,7 @@ function App() {
         </p>
         <p className="body">After clicking Start, you will be led to the Consent Form first. We would then like to ask you to answer some demographic questions.
         </p>
-        <button className="start-button" onClick={setPage('consent')}>
+        <button className="start-button" onClick={()=> setPage('consent')}>
             Start
         </button>
       </div>
@@ -43,17 +51,18 @@ function App() {
   }
 
   const Consent = () => {
+    console.log("current page: ", page)
     return (
       <div className='consent'>
           <Header></Header>
           <h1 className='title'>Consent Form: EyeVote Remote</h1>
-          <ol className='body'>
+          <ol className='body' style={{ listStyleType: "decimal" }}>
               <li>I am aware that the collection, processing and use of my data is voluntary. The study can be cancelled by me at any time without mentioning reasons and without causing meany disadvantages. In the event of cancellation, all data recorded of me will beirrevocably deleted.<p></p></li>
               <li>I agree that my following data are processed:
-                  <ol style={{ listStyleType: "lower-latin" }}>
-                      <li>demography (age in years, gender, education, job status, technical affinity)</li>
-                      <li>experiences with and attitudes towards various types of technology</li>
-                      <li>results from questionnaires on user experienced.video and audio recordings during study tasks</li>
+                  <ol style={{ listStyleType: "lower-latin" }} >
+                      <li className='identLi'>demography (age in years, gender, education, job status, technical affinity)</li>
+                      <li className='identLi'>experiences with and attitudes towards various types of technology</li>
+                      <li className='identLi'>results from questionnaires on user experienced.video and audio recordings during study tasks</li>
                   </ol>
                   Your data will be needed to answer scientific research questions regarding technologyuse in virtual worlds and real-world public settings. The study is not intended to evaluateyou or your performance, but to help in designing usable valuable experiences.<p></p>
               </li>
@@ -63,8 +72,8 @@ function App() {
               <li>
               I agree that my data will be collected, processed, used and stored by Ludwig-Maximilians- Universität (LMU) Munich and Bundeswehr University Munich for thefollowing purposes:
                   <ol style={{ listStyleType: "lower-latin" }}>
-                      <li>I agree that the results and primary data of this study may be published by the LMUMunich and Bundeswehr University Munich as a scientific publication. The data ispublished completely anonymously, i.e., the collected data cannot be related torespective participants.</li>
-                      <li>The anonymized data is stored for an indefinite period of time.</li>
+                      <li className='identLi'>I agree that the results and primary data of this study may be published by the LMUMunich and Bundeswehr University Munich as a scientific publication. The data ispublished completely anonymously, i.e., the collected data cannot be related torespective participants.</li>
+                      <li className='identLi'>The anonymized data is stored for an indefinite period of time.</li>
                   </ol>
                   <p></p>
               </li>
@@ -81,7 +90,7 @@ function App() {
                   <p></p>
               </li>
           </ol>
-          <button className='button' onClick={setPage('questions')}>
+          <button className='button' onClick={()=>setPage('questions')}>
         I understand
         </button>
           <p className="note">*By pressing “I understand”, I assure that I have read and understood the above consent and thus was informed about my rights. I certify that I agree to the processing of my data
@@ -92,6 +101,7 @@ function App() {
   }
 
   const Questions = () => {
+    console.log("current page: ", page)
     return (
         <div className='Questions'>
             <Header></Header>
@@ -125,7 +135,7 @@ function App() {
 
             <p className='body'>By clicking on "Start eye-tracking", we will start the Study. You will first be asked to calibrate the webcam eyetracker.
                 Please follow the instructions of the calibration and continue with the study afterwards</p>
-            <button className="button" >Start</button>
+            <button className="button"  onClick={toPage('eyevote')}>Start</button>
         </div>
     )
 }

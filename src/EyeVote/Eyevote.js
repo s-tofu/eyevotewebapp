@@ -7,7 +7,7 @@ const EyeVote = () => {
     // Attributes
 
     // State to show Question, shows StartScreen on State zero
-    const[question, setQuestion] = useState('0')
+    const[question, setQuestion] = useState('1')
     const[calibrationDone, setCalibrationDone] = useState('0')
     // State for Question undo
     const[undo, setUndo] = useState('0')
@@ -170,12 +170,12 @@ const EyeVote = () => {
 
     }
     useEffect(() => {
-        if(calibrationDone==='1') {
-        const interval = setInterval(() => {
+        //if(calibrationDone==='1') {
+        //const interval = setInterval(() => {
             calculateCorrelation();
-        }, 1000);
-    }
-    }, [])
+        //}, 1000);
+       //}
+    }, [answerOne_x])
     
 
 
@@ -185,7 +185,7 @@ const EyeVote = () => {
             <div className='Eyevote'>
                  <h1 className='header'>EyeVote Remote</h1>
                  <p className='instructions'>We will start with a calibration.<p></p>After calibration you will be presented 10 questions. <p></p>Please gaze at the answers you want to select.</p>
-                 <button className='button' onClick={() => {start(); setQuestion('1');}}>Start eye tracking</button>
+                 <button className='eyevotebutton' onClick={() => {start(); setQuestion('1');}}>Start eye tracking</button>
             </div>
         );
     }
