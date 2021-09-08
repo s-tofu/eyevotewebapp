@@ -15,7 +15,7 @@ function App() {
 
   const content = () => {
     if (page === 'consent') {
-      return <Consent />
+      return Consent()
     } else if (page === 'questions') {
       return <Questions />
     } else if (page === 'home') {
@@ -25,6 +25,12 @@ function App() {
 
   const padding = {
     padding: 5
+  }
+
+  const Consent = () => {
+    return (
+      <Consent />
+    );
   }
   return (
     <div className="App">

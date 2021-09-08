@@ -7,8 +7,13 @@ const EyeVote = () => {
     // Attributes
 
     // State to show Question, shows StartScreen on State zero
-    const[question, setQuestion] = useState('1')
-    // const [flip, setFlip] = useState(false)
+    const[question, setQuestion] = useState('0')
+    // State for Question undo
+    const[undo, setUndo] = useState('0')
+
+    document.createElement('answerOne')
+    document.createElement('answerTwo')
+    document.createElement('answerThree')
 
     // This attribute is set to true if an answer was selected
     var answerOne = false;
@@ -23,6 +28,14 @@ const EyeVote = () => {
     var answerTwo_y
     var answerThree_x
     var answerThree_y
+    var answerOne_rect
+    var answerTwo_rect
+    var answerThree_rect
+
+    // x and y coordinates of gaze
+    var gaze_x
+    var gaze_y
+    var gaze_time
 
     // correlations of labels
     var corAnswerOne
@@ -37,15 +50,24 @@ const EyeVote = () => {
 
     //On Load 
     var presentUser = true;
-    var logLabelPosition = [];
-    var logGazePosition = [];
+    var logLabelPositionOne_x = [];
+    var logLabelPositionOne_y= [];
+    var logLabelPositionTwo_x = []; 
+    var logLabelPositionTwo_y = [];
+    var logLabelPositionThree_x = [];
+    var logLabelPositionThree_y = [];
+    var logGazePosition_x = [];
+    var logGazePosition_y = [];
 
     // Question prompts
+
 
     // Conditional Question State control
     const questionNumber = () => {
         if (question === '0') {
           return(StartScreen());
+        } else if (undo === '1'){
+            return(UndoScreen());
         } else if(question === '1'){
             return(QuestionScreen());
         }
@@ -54,11 +76,10 @@ const EyeVote = () => {
     // Function on clicking Start button
     function start() {
         // Start with the Calobration and start Eyetracker
-        //window.GazeCloudAPI.StartEyeTracking()
+        window.GazeCloudAPI.StartEyeTracking()
         
-        //performMovement()
         // Use Gaze 
-        //window.GazeCloudAPI.OnResult = PlotGaze
+        window.GazeCloudAPI.OnResult = PlotGaze
     }
 
     // Handle Gaze results
@@ -66,31 +87,21 @@ const EyeVote = () => {
         document.getElementById('dotLookAt').style.left =`${result.docX}px`;
         document.getElementById('dotLookAt').style.top =`${result.docY}px`;
 
-        console.log("x: "+ answerOne_x + "y:" + answerOne_y)
-        console.log("gazex: " + result.docX +" gazey:"+ result.docY)
-        if (answerOne_y === `${result.docX}px` && answerOne_x === `${result.docY}px`) {
-            console.log("Answer one selected!")
-        }
-    }
+        gaze_x = result.docX;
+        gaze_y = result.docY;
 
-    function performMovement() {
-                  
+        console.log("gazex: " + result.docX +" gazey:"+ result.docY)
     }
-    
 
     // calculates Correlation
     function calculateCorrelation() {
         // import the fn for correlation
         const calculateCorrelation = require("calculate-correlation");
 
-        // given 4 points: (2,3), (5,3), (4,6) and (1,7)    
-        const x = [2, 5, 4, 1];
-        const y = [3, 3, 6, 7];
-
         // get the x and y coordinates of the labels and assign them
-        var answerOne_rect = document.getElementById('answerOne').getBoundingClientRect();
-        var answerTwo_rect = document.getElementById('answerTwo').getBoundingClientRect();
-        var answerThree_rect = document.getElementById('answerThree').getBoundingClientRect();
+        answerOne_rect = document.getElementById('answerOne').getBoundingClientRect();
+        answerTwo_rect = document.getElementById('answerTwo').getBoundingClientRect();
+        answerThree_rect = document.getElementById('answerThree').getBoundingClientRect();
         answerOne_x = answerOne_rect.left;
         answerOne_y = answerOne_rect.top;
         answerTwo_x = answerTwo_rect.left;
@@ -104,18 +115,28 @@ const EyeVote = () => {
         console.log("AnswerThree x: "+ answerThree_x + " y:" + answerThree_y)
 
         // constantly push the positions into the position arrays after each second
-        const interval = setInterval(() => {
-            logLabelPosition.push(answerOne_x);
-            logLabelPosition.push(answerOne_y);
-          }, 1000);
-        console.log(logLabelPosition);
+            logLabelPositionOne_x.push(answerOne_x);
+            logLabelPositionOne_y.push(answerOne_y);
+            logLabelPositionTwo_x.push(answerTwo_x)
+            logLabelPositionTwo_y.push(answerTwo_y)
+            logLabelPositionThree_x.push(answerThree_x)
+            logLabelPositionThree_y.push(answerThree_y)
+            logGazePosition_x.push(gaze_x)
+            logGazePosition_y.push(gaze_y)
 
         // calculate the correlation
-        const correlation = calculateCorrelation(x, y);
+        corAnswerOne_x = calculateCorrelation(logLabelPositionOne_x, logGazePosition_x);
+        corAnswerOne_y = calculateCorrelation(logLabelPositionOne_y, logGazePosition_y);
+        corAnswerTwo_x = calculateCorrelation(logLabelPositionTwo_x, logGazePosition_x);
+        corAnswerTwo_y = calculateCorrelation(logLabelPositionTwo_y, logGazePosition_y);
+        corAnswerThree_x = calculateCorrelation(logLabelPositionThree_x, logGazePosition_x);
+        corAnswerThree_y = calculateCorrelation(logLabelPositionThree_y, logGazePosition_y);
 
         corAnswerOne = corAnswerOne_x + corAnswerOne_y;
         corAnswerTwo = corAnswerTwo_x + corAnswerTwo_y;
         corAnswerThree = corAnswerThree_x + corAnswerThree_y;
+
+        console.log(corAnswerOne)
 
         if ((answerOne === false) && (answerTwo === false) && (answerThree === false))
                     {
@@ -147,8 +168,6 @@ const EyeVote = () => {
                         answerThree = false;
                     }
 
-        console.log(correlation); // logs -0.442807443
-        console.log(typeof correlation); // logs number
     }
     
 
@@ -166,11 +185,10 @@ const EyeVote = () => {
     // Question screen
     const QuestionScreen = () => {
         useEffect(() => {
-            const interval = setInterval(() => {
-                performMovement();
+            return () => {
                 calculateCorrelation();
-              }, 10000);
-            }, [])
+              }
+        }, gaze_x)
         return (
             <div className='Eyevote'>
                 <h1 className='question' id="questionPrompt">What is your favorite ice cream?</h1>
@@ -180,6 +198,17 @@ const EyeVote = () => {
             </div>
         );
     }
+
+    const UndoScreen = () => {
+        return (
+            <div className='Eyevote'>
+                <h1 className='question' id="questionPrompt">Do you want to change your answer?</h1>
+                <label className='answerOne' id="answerOne">Change</label>
+                <label className='answerTwo' id="answerTwo">Next</label>
+            </div>
+        );
+    }
+    
     return (
             <div className='Eyevote'>
              {questionNumber()}

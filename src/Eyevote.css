@@ -38,6 +38,8 @@
     margin: 20pt;
     top: 350px;
     left: 350px;
+    animation: circular 10s linear infinite;
+    animation-direction: alternate;
 }
 
 .answerTwo {
@@ -47,6 +49,7 @@
     margin: 20pt;
     top: 600px;
     left: 1300px;
+    animation: zigzag 10s linear infinite;
 }
 
 .answerThree {
@@ -59,6 +62,7 @@
     animation-duration: 8s;
     animation-iteration-count:infinite;
     animation-direction: alternate;
+    animation-timing-function: linear;
 }
 
 @keyframes diagonal {
@@ -67,6 +71,13 @@
   }
 
 @keyframes circular {
+    from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+}
+
+@keyframes zigzag {
+    from {top: 700px; left:1300px}
+    to {top: 700px; left: 200px}
 }
 
 .button {
