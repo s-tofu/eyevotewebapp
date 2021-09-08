@@ -166,11 +166,16 @@ const EyeVote = () => {
     // Question screen
     const QuestionScreen = () => {
         useEffect(() => {
+<<<<<<< Updated upstream
             const interval = setInterval(() => {
                 performMovement();
                 calculateCorrelation();
               }, 10000);
             }, [])
+=======
+                calculateCorrelation();
+        }, gaze_x)
+>>>>>>> Stashed changes
         return (
             <div className='Eyevote'>
                 <h1 className='question' id="questionPrompt">What is your favorite ice cream?</h1>
