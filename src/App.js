@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Header from './Header';
 import './App.css'
-import EyeVote from './Eyevote';
+import EyeVote from './EyeVote/Eyevote';
 
 function App() {
   const [page, setPage] = useState('home')
@@ -23,12 +23,7 @@ function App() {
     }
   }
 
-  const padding = {
-    padding: 5
-  }
-
   const Home = () => {
-    console.log("current page: ", page)
     return(
         <div className="App">
         <Header></Header>
@@ -51,7 +46,6 @@ function App() {
   }
 
   const Consent = () => {
-    console.log("current page: ", page)
     return (
       <div className='consent'>
           <Header></Header>
@@ -101,7 +95,6 @@ function App() {
   }
 
   const Questions = () => {
-    console.log("current page: ", page)
     return (
         <div className='Questions'>
             <Header></Header>

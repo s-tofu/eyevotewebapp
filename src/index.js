@@ -1,12 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import Consent from './Consent'
-import EyeVote from './Eyevote';
-import Questions from './Questions'
-
+import EyeVote from './EyeVote/Eyevote.js';
 
 ReactDOM.render(
-  <App />,
+  <EyeVote />,
   document.getElementById('root')
 )

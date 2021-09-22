@@ -7,10 +7,11 @@ const EyeVote = () => {
     // Attributes
 
     // State to show Question, shows StartScreen on State zero
-    const[question, setQuestion] = useState('1')
+    const[question, setQuestion] = useState(1)
+    const[correlation, setCorrelation] = useState('0')
     const[calibrationDone, setCalibrationDone] = useState('0')
     // State for Question undo
-    const[undo, setUndo] = useState('0')
+    const[undo, setUndo] = useState('1')
 
     document.createElement('answerOne')
     document.createElement('answerTwo')
@@ -65,17 +66,43 @@ const EyeVote = () => {
 
     // Conditional Question State control
     const questionNumber = () => {
-        if (question === '0') {
+        if (question === 0) {
           return(StartScreen());
         } else if (undo === '1'){
             return(UndoScreen());
-        } else if(question === '1'){
-            return(QuestionScreen());
+        } else if(question === 1){
+            return(QuestionScreen({prompt:"Is this your first time participating in an eyetracker study?", one:"Yes",two:"No", three:"I dont remember"}));
+        } else if(question === 2){
+            console.log(question)
+            return(QuestionScreen({prompt:"Do you prefer working/studying remotely or presence?", one:"Remotely",two:"Presence", three:"I dont mind"}));
+        } else if(question === 3){
+            return(QuestionScreen({prompt:"Which movie genre do you like the most?", one:"Thriller",two:"Action", three:"Comedy"}));
+        } else if(question === 4){
+            return(QuestionScreen({prompt:"Which social network do you use most often?", one:"Facebook",two:"Instagram", three:"Twitter"}));
+        } else if(question === 5){
+            return(QuestionScreen({prompt:"Which beverage would you choose?", one:"Tea",two:"Coffee", three:"Water"}));
+        } else if(question === 6){
+            return(QuestionScreen({prompt:"Which ice cream flavor would you choose?", one:"Vanilla",two:"Mango", three:"Chocolate"}));
+        } else if(question === 7){
+            return(QuestionScreen({prompt:"How often do you shop online?", one:"Almost daily",two:"Often", three:"Rarely"}));
+        } else if(question === 8){
+            return(QuestionScreen({prompt:"Which Superpower would you choose?", one:"Teleportation",two:"Read peoples mind", three:"Invisibility"}));
+        } else if(question === 9){
+            return(QuestionScreen({prompt:"Where do you like to swim?", one:"Beach",two:"I don't like swimming", three:"Pool"}));
+        } else if(question === 10){
+            return(QuestionScreen({prompt:"Which chewing gum flavor would you choose?", one:"Peppermint",two:"Bubble Gum", three:"Fruity"}));
+        } else if(question === 11){
+            return(
+                QuestionScreen({prompt:"Thank you for participating"},
+            ))
         }
       }
     
     // Function on clicking Start button
     function start() {
+        // Set API Key
+        window.GazeCloudAPI.APIKey= "GazeBehavior_NonCommercialUse"
+        
         // Start with the Calobration and start Eyetracker
         window.GazeCloudAPI.StartEyeTracking()
         
@@ -167,14 +194,17 @@ const EyeVote = () => {
                         answerTwo = false;
                         answerThree = false;
                     }
+        if(question === '10') {
+            setCorrelation('0')
+        }
 
     }
     useEffect(() => {
-        //if(calibrationDone==='1') {
+        if(correlation==='1') {
         //const interval = setInterval(() => {
             calculateCorrelation();
         //}, 1000);
-       //}
+       }
     }, [answerOne_x])
     
 
@@ -191,13 +221,15 @@ const EyeVote = () => {
     }
 
     // Question screen
-    const QuestionScreen = () => {
+    const QuestionScreen = (props) => {
+        console.log(question)
         return (
             <div className='Eyevote'>
-                <h1 className='question' id="questionPrompt">What is your favorite ice cream?</h1>
-                <label className='answerOne' id="answerOne">Vanille</label>
-                <label className='answerTwo' id="answerTwo">Chocolate</label>
-                <label className='answerThree' id="answerThree">Strawberry</label>
+                <h1 className='question' id="questionPrompt">{props.prompt}</h1>
+                <label className='answerOne' id="answerOne">{props.one}</label>
+                <label className='answerTwo' id="answerTwo">{props.two}</label>
+                <label className='answerThree' id="answerThree">{props.three}</label>
+                <button className='eyevotebutton' onClick={() =>setQuestion(question+1)}></button>
             </div>
         );
     }
