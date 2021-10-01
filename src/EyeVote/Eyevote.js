@@ -7,11 +7,11 @@ const EyeVote = () => {
     // Attributes
 
     // State to show Question, shows StartScreen on State zero
-    const[question, setQuestion] = useState(1)
+    const[question, setQuestion] = useState(0)
     const[correlation, setCorrelation] = useState('0')
     const[calibrationDone, setCalibrationDone] = useState('0')
     // State for Question undo
-    const[undo, setUndo] = useState('1')
+    const[undo, setUndo] = useState('0')
 
     document.createElement('answerOne')
     document.createElement('answerTwo')
@@ -104,11 +104,10 @@ const EyeVote = () => {
         window.GazeCloudAPI.APIKey= "GazeBehavior_NonCommercialUse"
         
         // Start with the Calobration and start Eyetracker
-        window.GazeCloudAPI.StartEyeTracking()
+        //window.GazeCloudAPI.StartEyeTracking()
         
         // Use Gaze 
         window.GazeCloudAPI.OnResult = PlotGaze
-        setCalibrationDone('1')
     }
 
     // Handle Gaze results
@@ -126,6 +125,7 @@ const EyeVote = () => {
         const calculateCorrelation = require("calculate-correlation");
 
         // get the x and y coordinates of the labels and assign them
+        if(calibrationDone==='1') {
         answerOne_rect = document.getElementById('answerOne').getBoundingClientRect();
         answerTwo_rect = document.getElementById('answerTwo').getBoundingClientRect();
         answerThree_rect = document.getElementById('answerThree').getBoundingClientRect();
@@ -135,6 +135,7 @@ const EyeVote = () => {
         answerTwo_y = answerTwo_rect.top;
         answerThree_x = answerThree_rect.left;
         answerThree_y = answerThree_rect.top;
+        }
 
         // console log the answers 
         //console.log("AnswerOne x: "+ answerOne_x + " y:" + answerOne_y)
@@ -163,7 +164,6 @@ const EyeVote = () => {
         corAnswerTwo = corAnswerTwo_x + corAnswerTwo_y;
         corAnswerThree = corAnswerThree_x + corAnswerThree_y;
 
-        console.log(corAnswerOne)
 
         if ((answerOne === false) && (answerTwo === false) && (answerThree === false))
                     {
@@ -200,12 +200,12 @@ const EyeVote = () => {
 
     }
     useEffect(() => {
-        if(correlation==='1') {
-        //const interval = setInterval(() => {
+        if(calibrationDone==='1') {
+        const interval = setInterval(() => {
             calculateCorrelation();
-        //}, 1000);
+        }, 1000);
        }
-    }, [answerOne_x])
+    },)
     
 
 
@@ -213,9 +213,12 @@ const EyeVote = () => {
     const StartScreen = () => {
         return (
             <div className='Eyevote'>
+                <label className='answerOne' id="answerOne"> </label>
+                <label className='answerTwo' id="answerTwo"> </label>
+                <label className='answerThree' id="answerThree"> </label>
                  <h1 className='header'>EyeVote Remote</h1>
                  <p className='instructions'>We will start with a calibration.<p></p>After calibration you will be presented 10 questions. <p></p>Please gaze at the answers you want to select.</p>
-                 <button className='eyevotebutton' onClick={() => {start(); setQuestion('1');}}>Start eye tracking</button>
+                 <button className='eyevotebutton' onClick={() => {start(); setQuestion(question+1); setCalibrationDone('1')}}>Start eye tracking</button>
             </div>
         );
     }

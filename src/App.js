@@ -2,8 +2,12 @@ import React, {useState} from 'react'
 import Header from './Header';
 import './App.css'
 import EyeVote from './EyeVote/Eyevote';
+import {db} from './firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 function App() {
+  
   const [page, setPage] = useState('home')
   const toPage = (page) => (event) => {
     event.preventDefault()
@@ -94,41 +98,65 @@ function App() {
   )
   }
 
+  const [age, setAge] = useState("")
+  const [gender, setGender] = useState("")
+  const [experience, setExperience] = useState("")
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    db.collection('studyfiles').add({
+      timestamp: firebase.firestore.Timestamp.now(),
+      age: age,
+      gender: gender,
+      experience: experience,
+    })
+    .then(() => {
+      alert("Message has been submitted.");
+    })
+    .catch((error) => {
+      alert(error.message);
+    })
+
+    setAge('')
+    setGender('')
+    setExperience('')
+    setPage('eyevote')
+  }
   const Questions = () => {
     return (
         <div className='Questions'>
             <Header></Header>
             <h1 className='title'>Demographic Questions</h1>
-            <form className='body'>
+            <form className='body' onSubmit={handleSubmit}>
                 <label>
                     How old are you? <p></p>
-                    <input type="text" age="age" />
+                    <input type="text" age="age" value={age} onChange={(e) => setAge(e.target.value)}/>
                 </label>
                 <p></p>
                 <label>
                     What is your gender? <p></p>
-                    <input type="radio" value="Male" name="gender"/> Male<p></p>
-                    <input type="radio" value="Female" name="gender"/> Female<p></p>
-                    <input type="radio" value="Non-binary" name="gender"/> Non-binary<p></p>
-                    <input type="radio" value="Prefer-not-to-say" name="gender"/> Prefer not to say<p></p>
-                    <input type="radio" value="Prefer-to-self-describe" name="gender"/> Prefer to self describe: <input type="text" age="age" />
+                    <input type="radio" value="Male" name="gender" onChange={(e) => setGender("Male")}/> Male<p></p>
+                    <input type="radio" value="Female" name="gender" onChange={(e) => setGender("Female")}/> Female<p></p>
+                    <input type="radio" value="Non-binary" name="gender" onChange={(e) => setGender("Non-binary")}/> Non-binary<p></p>
+                    <input type="radio" value="Prefer-not-to-say" name="gender" onChange={(e) => setGender("Prefer not to say")}/> Prefer not to say<p></p>
+                    Prefer to self describe: <input type="text" age="age" onChange={(e) => setGender(e.target.value)} />
                 </label>
                 <p></p>
                 <label>
                     How much experience do you have with eye-tracking? <p></p>
                     First time
-                    <input type="radio" value="0" name="experience"/>
-                    <input type="radio" value="1" name="experience"/>
-                    <input type="radio" value="2" name="experience"/>
-                    <input type="radio" value="3" name="experience"/>
-                    <input type="radio" value="4" name="experience"/>
+                    <input type="radio" value="0" name="experience" onChange={(e) => setExperience("0")}/>
+                    <input type="radio" value="1" name="experience" onChange={(e) => setExperience("1")}/>
+                    <input type="radio" value="2" name="experience" onChange={(e) => setExperience("2")}/>
+                    <input type="radio" value="3" name="experience" onChange={(e) => setExperience("3")}/>
+                    <input type="radio" value="4" name="experience" onChange={(e) => setExperience("4")}/>
                     I am very experienced
                 </label>
-            </form>
 
             <p className='body'>By clicking on "Start eye-tracking", we will start the Study. You will first be asked to calibrate the webcam eyetracker.
                 Please follow the instructions of the calibration and continue with the study afterwards</p>
-            <button className="button"  onClick={toPage('eyevote')}>Start</button>
+            <button className="button" type="submit">Start</button>
+            </form>
         </div>
     )
 }
