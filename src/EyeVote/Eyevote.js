@@ -9,8 +9,8 @@ import 'firebase/compat/firestore';
 
 const EyeVote = () => {
     // Attributes
-     // import the fn for correlation
-     const calculateCorrelation = require("calculate-correlation");
+    // import the fn for correlation
+    const calculateCorrelation = require("calculate-correlation");
 
     // State to show Question, shows StartScreen on State zero
     const[question, setQuestion] = useState(0)
@@ -118,11 +118,8 @@ const EyeVote = () => {
         // Start with the Callibration and start Eyetracker
         window.GazeCloudAPI.StartEyeTracking()
         
-        console.log (window.GazeCloudAPI.OnCalibrationComplete)
         // Use Gaze 
-        if (window.GazeCloudAPI.OnCalibrationComplete != null) {
         window.GazeCloudAPI.OnResult = PlotGaze
-        }
     }
 
     // Handle Gaze results
@@ -134,13 +131,10 @@ const EyeVote = () => {
         gaze_y = result.docY;
         
         Correlation(gaze_x, gaze_y)
-
-
     }
 
     // calculates Correlation
     function Correlation(gaze_x, gaze_y) {
-
         // get the x and y coordinates of the labels and assign them
         answerOne_rect = document.getElementById('answerOne').getBoundingClientRect();
         answerTwo_rect = document.getElementById('answerTwo').getBoundingClientRect();
@@ -175,33 +169,30 @@ const EyeVote = () => {
         corAnswerTwo = corAnswerTwo_x + corAnswerTwo_y;
         corAnswerThree = corAnswerThree_x + corAnswerThree_y;
 
-        console.log(logGazePosition_x.length)
-        console.log(logLabelPositionOne_x)
-        //console.log("One: " + corAnswerOne)
-        //console.log("Two: "+corAnswerTwo)
-        //console.log("Three: "+corAnswerThree)
-
-        if ((answerOne === false) && (answerTwo === false) && (answerThree === false))
+        if ((answerOne === false) && (answerTwo === false) && (answerThree === false) && (question>=1))
                     {
                         // If corelation for answer one is over corReference
-                        if (((corAnswerOne) >= 1.4))
+                        if (((corAnswerOne) >= 0.4))
                         {
                             console.log("Chosen: Answer One");
                             answerOne = true;
+                            setUndo('1')
                         }
 
                         // If corelation for answer one is over corReference
-                        else if (((corAnswerTwo) >= 1.4))
+                        else if (((corAnswerTwo) >= 0.4))
                         {
                             console.log("Chosen: Answer Two");
                             answerTwo = true;
+                            setUndo('1')
                         }
 
                         // If corelation for answer one is over corReference
-                        else if (((corAnswerThree) >= 1.4))
+                        else if (((corAnswerThree) >= 0.4))
                         {
                             console.log("Chosen: Answer Three");
                             answerThree = true;
+                            setUndo('1')
                         }
                     }
                     else
@@ -212,17 +203,17 @@ const EyeVote = () => {
                     }
         if(question === '10') {
             setCorrelation('0')
-        }
-
+    }
     }
     useEffect(() => {
         if (calibrationDone === '1') {
         const interval = setInterval(() => {
             Correlation();
-        }, 1000);
+        }, 5000);
     }
     },)
 
+    // empty arrays
     function empty() {
         console.log("emptied")
         logLabelPositionOne_x = [];
@@ -235,6 +226,11 @@ const EyeVote = () => {
         logGazePosition_y = [];
 
     }
+
+    // sleep
+    const sleep = (milliseconds) => {
+        return new Promise(resolve => setTimeout(resolve, milliseconds))
+      }
     
 
 
@@ -247,7 +243,7 @@ const EyeVote = () => {
                 <label className='answerThree' id="answerThree"> </label>
                  <h1 className='header'>EyeVote Remote</h1>
                  <p className='instructions'>The study will start with a calibration.<p></p>After calibration you will be presented 10 questions. <p></p>Please gaze at the answers you want to select.</p>
-                 <button className='eyevotebutton' onClick={() => {start(); setQuestion(question+1); setCalibrationDone('1')}}>Start eye tracking</button>
+                 <button className='eyevotebutton' onClick={() => {start(); sleep(90000).then(() => {setQuestion(question+1)}); setCalibrationDone('1')}}>Start eye tracking</button>
             </div>
         );
     }
@@ -261,7 +257,7 @@ const EyeVote = () => {
                 <label className='answerOne' id="answerOne">{props.one}</label>
                 <label className='answerTwo' id="answerTwo">{props.two}</label>
                 <label className='answerThree' id="answerThree">{props.three}</label>
-                <button className='eyevotebutton' onClick={() =>setQuestion(question+1)}></button>
+                <button onClick={() =>setUndo('1')}>Done</button>
             </div>
         );
     }
@@ -272,8 +268,9 @@ const EyeVote = () => {
                 <h1 className='question' id="questionPrompt">Do you want to change your answer?</h1>
                 <label className='answerOne' id="answerOne">Change</label>
                 <label className='answerTwo' id="answerTwo">Next</label>
-                <button className='eyevotebutton' onClick={() =>setQuestion(question+1)}>Next</button>
-                <button className='eyevotebutton' onClick={() =>setQuestion(question+1)}>Change</button>
+                <button onClick={() => {setQuestion(question+1); setUndo('0')}}>Next</button>
+                <p></p>
+                <button onClick={() =>setUndo('0')}>Change</button>
             </div>
         );
     }
