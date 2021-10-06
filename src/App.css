@@ -7,7 +7,15 @@
 .title {
   font-family: 'ABeeZee';
   color: black;
-  margin: 50px
+  margin: 50px;
+  font-weight: bold
+}
+
+.question_title {
+  font-family: 'ABeeZee';
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .body {

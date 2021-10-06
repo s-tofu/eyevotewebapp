@@ -2,9 +2,15 @@ import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom';
 import { useSpring, animated } from 'react-spring'
 import './Eyevote.css'
+import App from '../App';
+import {db} from '../firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 const EyeVote = () => {
     // Attributes
+     // import the fn for correlation
+     const calculateCorrelation = require("calculate-correlation");
 
     // State to show Question, shows StartScreen on State zero
     const[question, setQuestion] = useState(0)
@@ -52,6 +58,7 @@ const EyeVote = () => {
 
     //On Load 
     var presentUser = true;
+    var log_id = "siS0LDNyMLNmTuOZpLgk";
     var logLabelPositionOne_x = [];
     var logLabelPositionOne_y= [];
     var logLabelPositionTwo_x = []; 
@@ -61,9 +68,6 @@ const EyeVote = () => {
     var logGazePosition_x = [];
     var logGazePosition_y = [];
 
-    // Question prompts
-
-
     // Conditional Question State control
     const questionNumber = () => {
         if (question === 0) {
@@ -71,11 +75,13 @@ const EyeVote = () => {
         } else if (undo === '1'){
             return(UndoScreen());
         } else if(question === 1){
+            empty();
             return(QuestionScreen({prompt:"Is this your first time participating in an eyetracker study?", one:"Yes",two:"No", three:"I dont remember"}));
         } else if(question === 2){
-            console.log(question)
+            empty();
             return(QuestionScreen({prompt:"Do you prefer working/studying remotely or presence?", one:"Remotely",two:"Presence", three:"I dont mind"}));
         } else if(question === 3){
+            empty();
             return(QuestionScreen({prompt:"Which movie genre do you like the most?", one:"Thriller",two:"Action", three:"Comedy"}));
         } else if(question === 4){
             return(QuestionScreen({prompt:"Which social network do you use most often?", one:"Facebook",two:"Instagram", three:"Twitter"}));
@@ -100,14 +106,23 @@ const EyeVote = () => {
     
     // Function on clicking Start button
     function start() {
+        //add start timestamp
+        db.collection("studyfiles").doc(log_id).update( {
+            start_time: firebase.firestore.Timestamp.now()
+        }
+        )
+
         // Set API Key
         window.GazeCloudAPI.APIKey= "GazeBehavior_NonCommercialUse"
         
-        // Start with the Calobration and start Eyetracker
-        //window.GazeCloudAPI.StartEyeTracking()
+        // Start with the Callibration and start Eyetracker
+        window.GazeCloudAPI.StartEyeTracking()
         
+        console.log (window.GazeCloudAPI.OnCalibrationComplete)
         // Use Gaze 
+        if (window.GazeCloudAPI.OnCalibrationComplete != null) {
         window.GazeCloudAPI.OnResult = PlotGaze
+        }
     }
 
     // Handle Gaze results
@@ -117,15 +132,16 @@ const EyeVote = () => {
 
         gaze_x = result.docX;
         gaze_y = result.docY;
+        
+        Correlation(gaze_x, gaze_y)
+
+
     }
 
     // calculates Correlation
-    function calculateCorrelation() {
-        // import the fn for correlation
-        const calculateCorrelation = require("calculate-correlation");
+    function Correlation(gaze_x, gaze_y) {
 
         // get the x and y coordinates of the labels and assign them
-        if(calibrationDone==='1') {
         answerOne_rect = document.getElementById('answerOne').getBoundingClientRect();
         answerTwo_rect = document.getElementById('answerTwo').getBoundingClientRect();
         answerThree_rect = document.getElementById('answerThree').getBoundingClientRect();
@@ -135,14 +151,9 @@ const EyeVote = () => {
         answerTwo_y = answerTwo_rect.top;
         answerThree_x = answerThree_rect.left;
         answerThree_y = answerThree_rect.top;
-        }
+        
 
-        // console log the answers 
-        //console.log("AnswerOne x: "+ answerOne_x + " y:" + answerOne_y)
-        //console.log("AnswerTwo x: "+ answerTwo_x + " y:" + answerTwo_y)
-        //console.log("AnswerThree x: "+ answerThree_x + " y:" + answerThree_y)
-
-        // constantly push the positions into the position arrays after each second
+        // constantly push the positions into the position arrays
         logLabelPositionOne_x.push(answerOne_x);
         logLabelPositionOne_y.push(answerOne_y);
         logLabelPositionTwo_x.push(answerTwo_x)
@@ -164,6 +175,11 @@ const EyeVote = () => {
         corAnswerTwo = corAnswerTwo_x + corAnswerTwo_y;
         corAnswerThree = corAnswerThree_x + corAnswerThree_y;
 
+        console.log(logGazePosition_x.length)
+        console.log(logLabelPositionOne_x)
+        //console.log("One: " + corAnswerOne)
+        //console.log("Two: "+corAnswerTwo)
+        //console.log("Three: "+corAnswerThree)
 
         if ((answerOne === false) && (answerTwo === false) && (answerThree === false))
                     {
@@ -200,12 +216,25 @@ const EyeVote = () => {
 
     }
     useEffect(() => {
-        if(calibrationDone==='1') {
+        if (calibrationDone === '1') {
         const interval = setInterval(() => {
-            calculateCorrelation();
+            Correlation();
         }, 1000);
-       }
+    }
     },)
+
+    function empty() {
+        console.log("emptied")
+        logLabelPositionOne_x = [];
+        logLabelPositionOne_y= [];
+        logLabelPositionTwo_x = []; 
+        logLabelPositionTwo_y = [];
+        logLabelPositionThree_x = [];
+        logLabelPositionThree_y = [];
+        logGazePosition_x = [];
+        logGazePosition_y = [];
+
+    }
     
 
 
@@ -217,7 +246,7 @@ const EyeVote = () => {
                 <label className='answerTwo' id="answerTwo"> </label>
                 <label className='answerThree' id="answerThree"> </label>
                  <h1 className='header'>EyeVote Remote</h1>
-                 <p className='instructions'>We will start with a calibration.<p></p>After calibration you will be presented 10 questions. <p></p>Please gaze at the answers you want to select.</p>
+                 <p className='instructions'>The study will start with a calibration.<p></p>After calibration you will be presented 10 questions. <p></p>Please gaze at the answers you want to select.</p>
                  <button className='eyevotebutton' onClick={() => {start(); setQuestion(question+1); setCalibrationDone('1')}}>Start eye tracking</button>
             </div>
         );
@@ -243,6 +272,8 @@ const EyeVote = () => {
                 <h1 className='question' id="questionPrompt">Do you want to change your answer?</h1>
                 <label className='answerOne' id="answerOne">Change</label>
                 <label className='answerTwo' id="answerTwo">Next</label>
+                <button className='eyevotebutton' onClick={() =>setQuestion(question+1)}>Next</button>
+                <button className='eyevotebutton' onClick={() =>setQuestion(question+1)}>Change</button>
             </div>
         );
     }

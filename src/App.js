@@ -8,6 +8,7 @@ import 'firebase/compat/firestore';
 
 function App() {
   
+  var log_id;
   const [page, setPage] = useState('home')
   const toPage = (page) => (event) => {
     event.preventDefault()
@@ -35,15 +36,20 @@ function App() {
         </h1>
         <p className="body">First of all, thank you for your interest in my Bachelor Thesis study “Remote Eye-Tracking Studies: challenges and opportunities of conducting eye-tracking studies out of the lab”. 
         </p>
-        <p className="body">For this study, please use your desktop with a webcam or your laptop. A webcam is needed to track your eyes. Once the study starts, you will be asked 10 questions and will gaze at the moving answers that you want to select. The questions will only include neutral and personal questions where there is
-          no right or wrong. E.g. “Which ice cream flavor would you choose? Vanilla, Chocolate or Strawberry.”
+        <p className="body">For this study you will need:
+        <ol className='body' style={{ listStyleType: "decimal" }}>
+          <li>A desktop or a laptop with a webcam. A webcam is needed to track your eyes.</li>
+          <li>Sit in a quiet and bright room.</li>
+        </ol>
         </p>
+        <p className="body">Once the study starts, you will be asked 10 questions and will gaze at the moving answers that you want to select. The questions will only include neutral and personal questions where there is
+          no right or wrong. E.g. “Which ice cream flavor would you choose? Vanilla, Chocolate or Strawberry.” You will be able to undo your answer selection if you want to repeat the question.</p>
         <p className="body">This study will take approximately 15 minutes.
         </p>
-        <p className="body">After clicking Start, you will be led to the Consent Form first. We would then like to ask you to answer some demographic questions.
+        <p className="body">After clicking Continue, you will be led to the Consent Form first. We would then like to ask you to answer some demographic questions.
         </p>
         <button className="start-button" onClick={()=> setPage('consent')}>
-            Start
+            Continue
         </button>
       </div>
     );
@@ -101,6 +107,7 @@ function App() {
   const [age, setAge] = useState("")
   const [gender, setGender] = useState("")
   const [experience, setExperience] = useState("")
+  const [remotestudy, setRemoteStudy] = useState("")
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -109,9 +116,13 @@ function App() {
       age: age,
       gender: gender,
       experience: experience,
+      remotestudy: remotestudy,
+      gazedata: [],
+      labeldata: []
     })
-    .then(() => {
-      alert("Message has been submitted.");
+    .then(function(docRef) {
+      log_id = docRef;
+      alert("Form has been submitted.");
     })
     .catch((error) => {
       alert(error.message);
@@ -120,6 +131,7 @@ function App() {
     setAge('')
     setGender('')
     setExperience('')
+    setRemoteStudy('')
     setPage('eyevote')
   }
   const Questions = () => {
@@ -129,12 +141,12 @@ function App() {
             <h1 className='title'>Demographic Questions</h1>
             <form className='body' onSubmit={handleSubmit}>
                 <label>
-                    How old are you? <p></p>
+                    <p className='question_title'>How old are you?</p>
                     <input type="text" age="age" value={age} onChange={(e) => setAge(e.target.value)}/>
                 </label>
                 <p></p>
                 <label>
-                    What is your gender? <p></p>
+                <p className='question_title'>What is your gender?</p>
                     <input type="radio" value="Male" name="gender" onChange={(e) => setGender("Male")}/> Male<p></p>
                     <input type="radio" value="Female" name="gender" onChange={(e) => setGender("Female")}/> Female<p></p>
                     <input type="radio" value="Non-binary" name="gender" onChange={(e) => setGender("Non-binary")}/> Non-binary<p></p>
@@ -143,7 +155,7 @@ function App() {
                 </label>
                 <p></p>
                 <label>
-                    How much experience do you have with eye-tracking? <p></p>
+                <p className='question_title'>How much experience have you had with eye tracking?</p>
                     First time
                     <input type="radio" value="0" name="experience" onChange={(e) => setExperience("0")}/>
                     <input type="radio" value="1" name="experience" onChange={(e) => setExperience("1")}/>
@@ -152,9 +164,18 @@ function App() {
                     <input type="radio" value="4" name="experience" onChange={(e) => setExperience("4")}/>
                     I am very experienced
                 </label>
-
-            <p className='body'>By clicking on "Start eye-tracking", we will start the Study. You will first be asked to calibrate the webcam eyetracker.
-                Please follow the instructions of the calibration and continue with the study afterwards</p>
+                <p></p>
+                <label>
+                <p className='question_title'>How many remote studies have you participated in?</p>
+                    <input type="radio" value="0" name="remotestudy" onChange={(e) => setRemoteStudy("0")}/> 0<p></p>
+                    <input type="radio" value="1-3" name="remotestudy" onChange={(e) => setRemoteStudy("1-3")}/> 1-3<p></p>
+                    <input type="radio" value="More than 3" name="remotestudy" onChange={(e) => setRemoteStudy("More than 3")}/> More than 3<p></p>
+                    <input type="radio" value="I don't know" name="remotestudy" onChange={(e) => setRemoteStudy("I don't know")}/> I don't know<p></p>
+                </label>
+            <p><p className='question_title'>Reminder: </p>Once the study starts, you will be asked 10 questions and will gaze at the moving answers that you want to select. The questions will only include neutral and personal questions where there is
+          no right or wrong. E.g. “Which ice cream flavor would you choose? Vanilla, Chocolate or Strawberry.” You will be able to undo your answer selection if you want to repeat the question.</p>
+          <p>By clicking on "Start eye-tracking", we will start the Study. You will first be asked to calibrate the webcam eyetracker.
+                Please follow the instructions of the calibration and continue with the study afterwards.</p>
             <button className="button" type="submit">Start</button>
             </form>
         </div>
