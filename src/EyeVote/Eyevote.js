@@ -7,17 +7,24 @@ import {db} from '../firebase';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
-const EyeVote = () => {
+const EyeVote = (props) => {
     // Attributes
     // import the fn for correlation
     const calculateCorrelation = require("calculate-correlation");
 
     // State to show Question, shows StartScreen on State zero
-    const[question, setQuestion] = useState(0)
+    var[question, setQuestion] = useState(0)
     const[correlation, setCorrelation] = useState('0')
-    const[calibrationDone, setCalibrationDone] = useState('0')
     // State for Question undo
     const[undo, setUndo] = useState('0')
+    var questionprop = {
+        prompt: "Is this your first time participating in an eyetracker study?",
+        one:"Yes",
+        two:"No", 
+        three:"I dont remember"
+    }
+    var answerselected
+    var calibrationDone = false
 
     document.createElement('answerOne')
     document.createElement('answerTwo')
@@ -57,8 +64,7 @@ const EyeVote = () => {
     var corAnswerThree_y
 
     //On Load 
-    var presentUser = true;
-    var log_id = "siS0LDNyMLNmTuOZpLgk";
+    var log_id = "Sj8tEfUOW2TSWVz84h3U";
     var logLabelPositionOne_x = [];
     var logLabelPositionOne_y= [];
     var logLabelPositionTwo_x = []; 
@@ -73,30 +79,40 @@ const EyeVote = () => {
         if (question === 0) {
           return(StartScreen());
         } else if (undo === '1'){
-            return(UndoScreen());
-        } else if(question === 1){
+            // render the UndoScreen
+            return(UndoScreen({prompt: "Your answer was "+ answerselected + ". Do you want to change your answer?: ", change: "Change", next: "Next"}));} 
+        else if(question === 1){
             empty();
-            return(QuestionScreen({prompt:"Is this your first time participating in an eyetracker study?", one:"Yes",two:"No", three:"I dont remember"}));
+            return(QuestionScreen(questionprop));
         } else if(question === 2){
             empty();
-            return(QuestionScreen({prompt:"Do you prefer working/studying remotely or presence?", one:"Remotely",two:"Presence", three:"I dont mind"}));
+            questionprop = {prompt:"Do you prefer working/studying remotely or presence?", one:"Remotely",two:"Presence", three:"I dont mind"}
+            return(QuestionScreen(questionprop));
         } else if(question === 3){
             empty();
-            return(QuestionScreen({prompt:"Which movie genre do you like the most?", one:"Thriller",two:"Action", three:"Comedy"}));
+            questionprop = {prompt:"Which movie genre do you like the most?", one:"Thriller",two:"Action", three:"Comedy"}
+            return(QuestionScreen(questionprop));
         } else if(question === 4){
-            return(QuestionScreen({prompt:"Which social network do you use most often?", one:"Facebook",two:"Instagram", three:"Twitter"}));
+            questionprop = {prompt:"Which social network do you use most often?", one:"Facebook",two:"Instagram", three:"Twitter"}
+            return(QuestionScreen(questionprop));
         } else if(question === 5){
-            return(QuestionScreen({prompt:"Which beverage would you choose?", one:"Tea",two:"Coffee", three:"Water"}));
+            questionprop = {prompt:"Which beverage would you choose?", one:"Tea",two:"Coffee", three:"Water"}
+            return(QuestionScreen(questionprop));
         } else if(question === 6){
-            return(QuestionScreen({prompt:"Which ice cream flavor would you choose?", one:"Vanilla",two:"Mango", three:"Chocolate"}));
+            questionprop = {prompt:"Which ice cream flavor would you choose?", one:"Vanilla",two:"Mango", three:"Chocolate"}
+            return(QuestionScreen(questionprop));
         } else if(question === 7){
-            return(QuestionScreen({prompt:"How often do you shop online?", one:"Almost daily",two:"Often", three:"Rarely"}));
+            questionprop = {prompt:"How often do you shop online?", one:"Almost daily",two:"Often", three:"Rarely"}
+            return(QuestionScreen(questionprop));
         } else if(question === 8){
-            return(QuestionScreen({prompt:"Which Superpower would you choose?", one:"Teleportation",two:"Read peoples mind", three:"Invisibility"}));
+            questionprop = {prompt:"Which Superpower would you choose?", one:"Teleportation",two:"Read peoples mind", three:"Invisibility"}
+            return(QuestionScreen(questionprop));
         } else if(question === 9){
-            return(QuestionScreen({prompt:"Where do you like to swim?", one:"Beach",two:"I don't like swimming", three:"Pool"}));
+            questionprop = {prompt:"Where do you like to swim?", one:"Beach",two:"I don't like swimming", three:"Pool"}
+            return(QuestionScreen(questionprop));
         } else if(question === 10){
-            return(QuestionScreen({prompt:"Which chewing gum flavor would you choose?", one:"Peppermint",two:"Bubble Gum", three:"Fruity"}));
+            questionprop = {prompt:"Which chewing gum flavor would you choose?", one:"Peppermint",two:"Bubble Gum", three:"Fruity"}
+            return(QuestionScreen(questionprop));
         } else if(question === 11){
             return(
                 QuestionScreen({prompt:"Thank you for participating"},
@@ -169,30 +185,59 @@ const EyeVote = () => {
         corAnswerTwo = corAnswerTwo_x + corAnswerTwo_y;
         corAnswerThree = corAnswerThree_x + corAnswerThree_y;
 
-        if ((answerOne === false) && (answerTwo === false) && (answerThree === false) && (question>=1))
-                    {
+        console.log("One: " + answerOne + ", Two: " + answerTwo + " , Three: " + answerThree, "set Undo: " + undo)
+
+        //undo screen logic
+        if (answerOne === true || answerTwo === true || answerThree === true) {
+            if (((corAnswerOne) >= 1.4))
+                        {
+                            console.log("Change");
+                            answerOne = false;
+                            empty()
+                            sleep(5000).then(() => {setUndo('0')})
+                        }
+
                         // If corelation for answer one is over corReference
-                        if (((corAnswerOne) >= 0.4))
+                        else if (((corAnswerTwo) >= 1.4))
+                        {
+                            console.log("Next");
+                            answerTwo = false;
+                            setQuestion(question+1)
+                            empty()
+                            sleep(5000).then(() => {setUndo('0')})
+                        }
+        }
+        // check correllation
+        sleep(2000)
+        if (calibrationDone === true) {
+            console.log(corAnswerOne)
+        if ((answerOne === false) && (answerTwo === false) && (answerThree === false))
+                    {
+                        // If correlation for answer one is over corReference
+                        if (((corAnswerOne) >= 1.4))
                         {
                             console.log("Chosen: Answer One");
                             answerOne = true;
-                            setUndo('1')
+                            answerselected = questionprop.one
+                            empty()
                         }
 
-                        // If corelation for answer one is over corReference
-                        else if (((corAnswerTwo) >= 0.4))
+                        // If correlation for answer two is over corReference
+                        else if (((corAnswerTwo) >= 1.4))
                         {
                             console.log("Chosen: Answer Two");
                             answerTwo = true;
-                            setUndo('1')
+                            answerselected = questionprop.two
+                            empty()
                         }
 
-                        // If corelation for answer one is over corReference
-                        else if (((corAnswerThree) >= 0.4))
+                        // If correlation for answer three is over corReference
+                        else if (((corAnswerThree) >= 1.4))
                         {
                             console.log("Chosen: Answer Three");
                             answerThree = true;
-                            setUndo('1')
+                            answerselected = questionprop.three
+                            empty()
                         }
                     }
                     else
@@ -201,34 +246,38 @@ const EyeVote = () => {
                         answerTwo = false;
                         answerThree = false;
                     }
-        if(question === '10') {
+        }
+        if(question === 10) {
             setCorrelation('0')
     }
     }
     useEffect(() => {
-        if (calibrationDone === '1') {
+        // clear for tracking intervall
         const interval = setInterval(() => {
-            Correlation();
-        }, 5000);
-    }
+            empty();
+        }, 2000);
     },)
+
+    // log data into firestore
+    function logData() {
+
+    }
+
 
     // empty arrays
     function empty() {
-        console.log("emptied")
-        logLabelPositionOne_x = [];
-        logLabelPositionOne_y= [];
-        logLabelPositionTwo_x = []; 
-        logLabelPositionTwo_y = [];
-        logLabelPositionThree_x = [];
-        logLabelPositionThree_y = [];
-        logGazePosition_x = [];
-        logGazePosition_y = [];
-
+        logLabelPositionOne_x.length = 0;
+        logLabelPositionOne_y.length = 0;
+        logLabelPositionTwo_x.length = 0; 
+        logLabelPositionTwo_y.length = 0;
+        logLabelPositionThree_x.length = 0;
+        logLabelPositionThree_y.length = 0;
+        logGazePosition_x.length = 0;
+        logGazePosition_y.length = 0;
     }
 
     // sleep
-    const sleep = (milliseconds) => {
+    function sleep(milliseconds){
         return new Promise(resolve => setTimeout(resolve, milliseconds))
       }
     
@@ -243,7 +292,7 @@ const EyeVote = () => {
                 <label className='answerThree' id="answerThree"> </label>
                  <h1 className='header'>EyeVote Remote</h1>
                  <p className='instructions'>The study will start with a calibration.<p></p>After calibration you will be presented 10 questions. <p></p>Please gaze at the answers you want to select.</p>
-                 <button className='eyevotebutton' onClick={() => {start(); sleep(90000).then(() => {setQuestion(question+1)}); setCalibrationDone('1')}}>Start eye tracking</button>
+                 <button className='eyevotebutton' onClick={() => {start(); sleep(90000).then(() => {setQuestion(question+1); calibrationDone = true})}}>Start</button>
             </div>
         );
     }
@@ -251,6 +300,7 @@ const EyeVote = () => {
     // Question screen
     const QuestionScreen = (props) => {
         console.log(question)
+        console.log(calibrationDone)
         return (
             <div className='Eyevote'>
                 <h1 className='question' id="questionPrompt">{props.prompt}</h1>
@@ -262,12 +312,15 @@ const EyeVote = () => {
         );
     }
 
-    const UndoScreen = () => {
+    // Undo Screen
+    const UndoScreen = (props) => {
+        console.log("Undo screen here hehe")
         return (
             <div className='Eyevote'>
-                <h1 className='question' id="questionPrompt">Do you want to change your answer?</h1>
-                <label className='answerOne' id="answerOne">Change</label>
-                <label className='answerTwo' id="answerTwo">Next</label>
+                <h1 className='question' id="questionPrompt">{props.prompt}</h1>
+                <label className='answerOne' id="answerOne">{props.change}</label>
+                <label className='answerTwo' id="answerTwo">{props.next}</label>
+                <label className='answerTwo' id="answerThree"></label>
                 <button onClick={() => {setQuestion(question+1); setUndo('0')}}>Next</button>
                 <p></p>
                 <button onClick={() =>setUndo('0')}>Change</button>
