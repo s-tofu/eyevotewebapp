@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Header from './Header';
 import './App.css'
 import EyeVote from './EyeVote/Eyevote';
@@ -8,7 +8,7 @@ import 'firebase/compat/firestore';
 
 function App() {
   
-  var log_id = "";
+  const [log_id, setLog_id] = useState("");
   const [page, setPage] = useState('home')
   const toPage = (page) => (event) => {
     event.preventDefault()
@@ -24,7 +24,8 @@ function App() {
       return (Home());
     }
     if (page === 'eyevote') {
-      return <EyeVote props={log_id}/>
+      console.log(log_id)
+      return <EyeVote id={log_id}/>
     }
   }
 
@@ -104,6 +105,7 @@ function App() {
   )
   }
 
+  // form values
   const [age, setAge] = useState("")
   const [gender, setGender] = useState("")
   const [experience, setExperience] = useState("")
@@ -124,8 +126,9 @@ function App() {
       labeldata: []
     })
     .then(function(docRef) {
-      log_id = docRef.id;
+      setLog_id(docRef.id)
       alert("Form has been submitted." + log_id);
+      setPage("eyevote")
     })
     .catch((error) => {
       alert(error.message);
@@ -135,8 +138,8 @@ function App() {
     setGender('')
     setExperience('')
     setRemoteStudy('')
-    setPage('eyevote')
   }
+
   const Questions = () => {
     return (
         <div className='Questions'>
