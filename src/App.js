@@ -109,33 +109,79 @@ function App() {
   const [experience, setExperience] = useState("")
   const [remotestudy, setRemoteStudy] = useState("")
   const [screensize, setScreenSize] = useState("")
+  const [ageError, setAgeError] = useState("")
+  const [genderError, setGenderError] = useState("")
+  const [experienceError, setExperienceError] = useState("")
+  const [remotestudyError, setRemotestudyError] = useState("")
+  const [screensizeError, setScreensizeError] = useState("")
+  const [isValid, setIsValid] = useState(false)
+
+
+  const validate = () => {
+    setIsValid(false)
+    let ageerr= ""
+    let gendererr = ""
+    let experienceerr = ""
+    let remotestudyerr = ""
+    let screensizeerr = ""
+    if(isNaN(age) || age.length === 0) {
+      console.log("age not right")
+      ageerr = " * Age has to be a number. E.g. 56";
+    }
+    if(gender.length === 0) {
+      console.log("gender not right")
+      gendererr = " * Please select an option."
+    }
+    if(experience.length === 0) {
+      console.log("exp not right")
+      experienceerr = " * Please select an option."
+    }
+    if(remotestudy.length === 0) {
+      console.log("remote not right")
+      remotestudyerr = " * Please select an option."
+    }
+    if(screensize.length === 0) {
+      console.log("screensize not right")
+      screensizeerr = " * Please state a screen size."
+    }
+    if(ageerr || gendererr || remotestudyerr || experienceerr || screensizeerr) {
+      console.log("here is false")
+      setAgeError(ageerr)
+      setGenderError(gendererr)
+      setRemotestudyError(remotestudyerr)
+      setExperienceError(experienceerr)
+      setScreensizeError(screensizeerr)
+      return false;
+    }
+      return true;
+
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    db.collection('studyfiles').add({
-      timestamp: firebase.firestore.Timestamp.now(),
-      age: age,
-      gender: gender,
-      experience: experience,
-      remotestudy: remotestudy,
-      screensize: screensize,
-      start_time: firebase.firestore.Timestamp.now(),
-      gazedata: [],
-      labeldata: []
-    })
-    .then(function(docRef) {
-      setLog_id(docRef.id)
-      alert("Form has been submitted." + log_id);
-    })
-    .catch((error) => {
-      alert(error.message);
-    })
-
-    setAge('')
-    setGender('')
-    setExperience('')
-    setRemoteStudy('')
+    setIsValid(validate());
+    console.log(isValid)
+    if (isValid) {
+      db.collection('studyfiles').add({
+        timestamp: firebase.firestore.Timestamp.now(),
+        age: age,
+        gender: gender,
+        experience: experience,
+        remotestudy: remotestudy,
+        screensize: screensize,
+        start_time: firebase.firestore.Timestamp.now(),
+        gazedata: [],
+        labeldata: []
+      })
+      .then(function(docRef) {
+        setLog_id(docRef.id)
+        alert("Form has been submitted." + log_id );
+      })
+      .catch((error) => {
+        alert(error.message);
+      })
     setPage('eyevote')
+    }
   }
   const Questions = () => {
     return (
@@ -144,12 +190,12 @@ function App() {
             <h1 className='title'>Demographic Questions</h1>
             <form className='body' onSubmit={handleSubmit}>
                 <label>
-                    <p className='question_title'>How old are you?</p>
+                    <p className='question_title'>How old are you? <text style={{color: 'red'}}>{ageError}</text></p>
                     <input type="text" age="age" value={age} onChange={(e) => setAge(e.target.value)}/>
                 </label>
                 <p></p>
                 <label>
-                <p className='question_title'>What is your gender?</p>
+                <p className='question_title'>What is your gender? <text style={{color: 'red'}}>{genderError}</text></p>
                     <input type="radio" value="Male" name="gender" onChange={(e) => setGender("Male")}/> Male<p></p>
                     <input type="radio" value="Female" name="gender" onChange={(e) => setGender("Female")}/> Female<p></p>
                     <input type="radio" value="Non-binary" name="gender" onChange={(e) => setGender("Non-binary")}/> Non-binary<p></p>
@@ -158,7 +204,7 @@ function App() {
                 </label>
                 <p></p>
                 <label>
-                <p className='question_title'>How much experience have you had with eye tracking?</p>
+                <p className='question_title'>How much experience have you had with eye tracking? <text style={{color: 'red'}}>{experienceError}</text></p>
                     First time
                     <input type="radio" value="0" name="experience" onChange={(e) => setExperience("0")}/>
                     <input type="radio" value="1" name="experience" onChange={(e) => setExperience("1")}/>
@@ -169,14 +215,14 @@ function App() {
                 </label>
                 <p></p>
                 <label>
-                <p className='question_title'>How many remote studies have you participated in?</p>
+                <p className='question_title'>How many remote studies have you participated in? <text style={{color: 'red'}}>{remotestudyError}</text></p>
                     <input type="radio" value="0" name="remotestudy" onChange={(e) => setRemoteStudy("0")}/> 0<p></p>
                     <input type="radio" value="1-3" name="remotestudy" onChange={(e) => setRemoteStudy("1-3")}/> 1-3<p></p>
                     <input type="radio" value="More than 3" name="remotestudy" onChange={(e) => setRemoteStudy("More than 3")}/> More than 3<p></p>
                     <input type="radio" value="I don't know" name="remotestudy" onChange={(e) => setRemoteStudy("I don't know")}/> I don't know<p></p>
                 </label>
                 <label>
-                    <p className='question_title'>Please state your screen size. E.g. 1920×1080, 1366×768 </p>
+                    <p className='question_title'>Please state your screen size. E.g. 1920×1080, 1366×768 <text style={{color: 'red'}}>{screensizeError}</text></p>
                     <input type="text" age="age" value={screensize} onChange={(e) => setScreenSize(e.target.value)}/>
                 </label>
             <p><p className='question_title'>Reminder: 
