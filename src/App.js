@@ -8,7 +8,7 @@ import 'firebase/compat/firestore';
 
 function App() {
   
-  var log_id = "";
+  const [log_id, setLog_id] = useState("");
   const [page, setPage] = useState('home')
   const toPage = (page) => (event) => {
     event.preventDefault()
@@ -124,7 +124,7 @@ function App() {
       labeldata: []
     })
     .then(function(docRef) {
-      log_id = docRef.id;
+      setLog_id(docRef.id)
       alert("Form has been submitted." + log_id);
     })
     .catch((error) => {

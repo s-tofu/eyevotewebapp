@@ -17,6 +17,7 @@ const EyeVote = (props) => {
     const[correlation, setCorrelation] = useState('0')
     // State for Question undo
     const[undo, setUndo] = useState('0')
+    const[undoscreen, setUndoScreen] = useState(false)
     var questionprop = {
         prompt: "Is this your first time participating in an eyetracker study?",
         one:"Yes",
@@ -24,16 +25,16 @@ const EyeVote = (props) => {
         three:"I dont remember"
     }
     var answerselected
-    var calibrationDone = false
+    const [calibrationDone, setCalibrationDone] = useState(false)
 
     document.createElement('answerOne')
     document.createElement('answerTwo')
     document.createElement('answerThree')
 
     // This attribute is set to true if an answer was selected
-    var answerOne = false;
-    var answerTwo = false;
-    var answerThree = false;
+    const [answerOne, setAnswerOne] = useState(false);
+    const [answerTwo, setAnswerTwo] = useState(false);
+    const [answerThree, setAnswerThree] = useState(false);
 
     // Labels
     // x and y coordinates of labels
@@ -64,7 +65,7 @@ const EyeVote = (props) => {
     var corAnswerThree_y
 
     //On Load 
-    var log_id = "Sj8tEfUOW2TSWVz84h3U";
+    const [log_id, setLog_id] = useState(props.id);
     var logLabelPositionOne_x = [];
     var logLabelPositionOne_y= [];
     var logLabelPositionTwo_x = []; 
@@ -188,11 +189,11 @@ const EyeVote = (props) => {
         console.log("One: " + answerOne + ", Two: " + answerTwo + " , Three: " + answerThree, "set Undo: " + undo)
 
         //undo screen logic
-        if (answerOne === true || answerTwo === true || answerThree === true) {
+        if ((undoscreen===true) && (answerOne === true || answerTwo === true || answerThree === true)) {
             if (((corAnswerOne) >= 1.4))
                         {
                             console.log("Change");
-                            answerOne = false;
+                            setAnswerOne(false);
                             empty()
                             sleep(5000).then(() => {setUndo('0')})
                         }
@@ -201,7 +202,7 @@ const EyeVote = (props) => {
                         else if (((corAnswerTwo) >= 1.4))
                         {
                             console.log("Next");
-                            answerTwo = false;
+                            setAnswerTwo(false);
                             setQuestion(question+1)
                             empty()
                             sleep(5000).then(() => {setUndo('0')})
@@ -217,7 +218,7 @@ const EyeVote = (props) => {
                         if (((corAnswerOne) >= 1.4))
                         {
                             console.log("Chosen: Answer One");
-                            answerOne = true;
+                            setAnswerOne(true)
                             answerselected = questionprop.one
                             empty()
                         }
@@ -226,7 +227,7 @@ const EyeVote = (props) => {
                         else if (((corAnswerTwo) >= 1.4))
                         {
                             console.log("Chosen: Answer Two");
-                            answerTwo = true;
+                            setAnswerTwo(true)
                             answerselected = questionprop.two
                             empty()
                         }
@@ -235,16 +236,13 @@ const EyeVote = (props) => {
                         else if (((corAnswerThree) >= 1.4))
                         {
                             console.log("Chosen: Answer Three");
-                            answerThree = true;
+                            setAnswerThree(true)
                             answerselected = questionprop.three
                             empty()
                         }
                     }
                     else
                     {
-                        answerOne = false;
-                        answerTwo = false;
-                        answerThree = false;
                     }
         }
         if(question === 10) {
@@ -292,7 +290,7 @@ const EyeVote = (props) => {
                 <label className='answerThree' id="answerThree"> </label>
                  <h1 className='header'>EyeVote Remote</h1>
                  <p className='instructions'>The study will start with a calibration.<p></p>After calibration you will be presented 10 questions. <p></p>Please gaze at the answers you want to select.</p>
-                 <button className='eyevotebutton' onClick={() => {start(); sleep(90000).then(() => {setQuestion(question+1); calibrationDone = true})}}>Start</button>
+                 <button className='eyevotebutton' onClick={() => {start(); sleep(90000).then(() => {setQuestion(question+1); setCalibrationDone(true)})}}>Start</button>
             </div>
         );
     }
