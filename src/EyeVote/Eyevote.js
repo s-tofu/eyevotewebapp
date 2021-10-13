@@ -15,6 +15,7 @@ const EyeVote = (props) => {
     // State to show Question, shows StartScreen on State zero
     var[question, setQuestion] = useState(0)
     const[correlation, setCorrelation] = useState('0')
+
     // State for Question undo
     const[undo, setUndo] = useState('0')
     const[undoscreen, setUndoScreen] = useState(false)
@@ -35,6 +36,11 @@ const EyeVote = (props) => {
     const [answerOne, setAnswerOne] = useState(false);
     const [answerTwo, setAnswerTwo] = useState(false);
     const [answerThree, setAnswerThree] = useState(false);
+
+    // values of the answers
+    const [answerOneprop, setAnswerOneProp] = useState("");
+    const [answerTwoprop, setAnswerTwoProp] = useState("");
+    const [answerThreeprop, setAnswerThreeProp] = useState("");
 
     // Labels
     // x and y coordinates of labels
@@ -65,15 +71,15 @@ const EyeVote = (props) => {
     var corAnswerThree_y
 
     //On Load 
-    const [log_id, setLog_id] = useState(props.id);
-    var logLabelPositionOne_x = [];
-    var logLabelPositionOne_y= [];
-    var logLabelPositionTwo_x = []; 
-    var logLabelPositionTwo_y = [];
-    var logLabelPositionThree_x = [];
-    var logLabelPositionThree_y = [];
-    var logGazePosition_x = [];
-    var logGazePosition_y = [];
+    const [log_id, setLog_id] = useState("wtPeyL5RjuXD9t2kBaCE");
+    const logLabelPositionOne_x = [];
+    const logLabelPositionOne_y= [];
+    const logLabelPositionTwo_x = []; 
+    const logLabelPositionTwo_y = [];
+    const logLabelPositionThree_x = [];
+    const logLabelPositionThree_y = [];
+    const logGazePosition_x = [];
+    const logGazePosition_y = [];
 
     // Conditional Question State control
     const questionNumber = () => {
@@ -297,8 +303,10 @@ const EyeVote = (props) => {
 
     // Question screen
     const QuestionScreen = (props) => {
-        console.log(question)
-        console.log(calibrationDone)
+        setAnswerOneProp(props.one)
+        setAnswerTwoProp(props.two)
+        setAnswerThreeProp(props.three)
+        console.log("Question number:" + question)
         return (
             <div className='Eyevote'>
                 <h1 className='question' id="questionPrompt">{props.prompt}</h1>

@@ -38,15 +38,15 @@ function App() {
         </p>
         <p className="body">For this study you will need:
         <ol className='body' style={{ listStyleType: "decimal" }}>
-          <li>A desktop or a laptop with a webcam. A webcam is needed to track your eyes.</li>
-          <li>Sit in a quiet and bright room.</li>
+          <li>a desktop or a laptop with a webcam. A webcam is needed to track your eyes.</li>
+          <li>to sit in a quiet and bright room.</li>
         </ol>
         </p>
         <p className="body">Once the study starts, you will be asked 10 questions and will gaze at the moving answers that you want to select. The questions will only include neutral and personal questions where there is
           no right or wrong. E.g. “Which ice cream flavor would you choose? Vanilla, Chocolate or Strawberry.” You will be able to undo your answer selection if you want to repeat the question.</p>
         <p className="body">This study will take approximately 15 minutes.
         </p>
-        <p className="body">After clicking Continue, you will be led to the Consent Form first. We would then like to ask you to answer some demographic questions.
+        <p className="body">After clicking "Continue", you will be led to the Consent Form first. We would then like to ask you to answer some demographic questions.
         </p>
         <button className="start-button" onClick={()=> setPage('consent')}>
             Continue
