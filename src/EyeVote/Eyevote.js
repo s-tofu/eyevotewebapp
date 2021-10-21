@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
-import ReactDOM from 'react-dom';
-import { useSpring, animated } from 'react-spring'
 import './Eyevote.css'
-import App from '../App';
 import {db} from '../firebase';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-import correlation from 'calculate-correlation/lib/correlation';
 import PostStudy from './PostStudy.js'
 
 const EyeVote = (props) => {
@@ -379,8 +375,8 @@ const EyeVote = (props) => {
                 <label className='answerTwo' id="answerTwo"> </label>
                 <label className='answerThree' id="answerThree"> </label>
                  <h1 className='header'>{props.header}</h1>
-                 <p className='instructions'>{id.current}The study will start with a calibration.<p></p>After calibration you will be presented 10 questions.</p>
-                 <button className='eyevotebutton' onClick={() => {/*start();*/ question.current = question.current + 1; setUndo('2')}}>
+                 <p className='instructions'>The study will start with a calibration.<p></p>After calibration you will be presented 10 questions.</p>
+                 <button className='eyevotebutton' onClick={() => {start(); question.current = question.current + 1; setUndo('2')}}>
                      Start Calibration
                  </button>
             </div>
