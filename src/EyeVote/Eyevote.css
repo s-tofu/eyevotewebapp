@@ -1,0 +1,106 @@
+.Eyevote {
+    background: dimgray;
+    font-family: "Microsoft Sans Serif";
+    height: 100vh;
+    width: 100vw;
+}
+
+.header {
+    position: absolute;
+    color: white;
+    font-size: 60pt;
+    top: 20vh;
+    left: 36vw; 
+}
+
+.instructions {
+    position: absolute;
+    color: white;
+    text-align: center;
+    font-size: 20pt;
+    top: 35vh;
+    left: 35vw;
+}
+
+.question {
+    color: white;
+    font-size: 6vh;
+    top: 50px;
+    left: 30vw;
+    margin-top: 0;
+    padding: 20px
+}
+
+.answerOne {
+    position: absolute;
+    color: white;
+    font-size: 6vh;
+    margin: 20pt;
+    top: 350px;
+    left: 350px;
+    animation: circular 15s linear infinite;
+    animation-direction: alternate;
+}
+
+.answerTwo {
+    position: absolute;
+    color: white;
+    font-size: 6vh;
+    margin: 20pt;
+    top: 600px;
+    left: 1200px;
+    animation: zigzag 15s linear infinite;
+    animation-direction: alternate;
+}
+
+.answerThree {
+    position: absolute;
+    color: white;
+    font-size: 6vh;
+    top: 250px;
+    left: 1200px;
+    animation-name: diagonal;
+    animation-duration: 10s;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;
+    animation-timing-function: linear;
+}
+
+@keyframes diagonal {
+    from {top: 250px; left: 1200px}
+    to {top: 500px; left: 700px}
+  }
+
+@keyframes circular {
+    from { transform: rotate(0deg) translateX(180px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(180px) rotate(-360deg); }
+}
+
+@keyframes zigzag {
+    0% {top: 700px; left:1300px}
+    20% {top: 600px; left: 1100px}
+    40% {top: 700px; left: 900px}
+    60% {top:600px; left: 700px}
+    80% {top:700px; left: 500px}
+    100% {top:600px; left: 300px}
+}
+
+.eyevotebutton {
+    position: absolute;
+    border-color: none;
+    color: gray;
+    top: 55vh;
+    left: 45vw;
+    font-size: 16px;
+    width: 200px;
+    height: 50px;
+  }
+
+.dot {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: green;
+    border-radius: 100%;
+  }
+  
