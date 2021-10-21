@@ -151,9 +151,6 @@ const EyeVote = (props) => {
 
     // Handle Gaze results
     function PlotGaze(result) {
-        document.getElementById('dotLookAt').style.left =`${result.docX}px`;
-        document.getElementById('dotLookAt').style.top =`${result.docY}px`;
-
         gaze_x = result.docX;
         gaze_y = result.docY;
         gaze_time = result.time;
@@ -196,20 +193,15 @@ const EyeVote = (props) => {
         corAnswerOne = corAnswerOne_x + corAnswerOne_y;
         corAnswerTwo = corAnswerTwo_x + corAnswerTwo_y;
         corAnswerThree = corAnswerThree_x + corAnswerThree_y;
-
-        //console.log("One:" + corAnswerOne + " Two: " + corAnswerTwo + " Three: " + corAnswerThree)
     }
 
     useEffect(() => {
-        console.log(question.current)
         // clear for tracking intervall
         const interval = setInterval(() => {
             if (calibrationDone.current === true) {
         if ((undoscreen.current===true) && (answerOne.current === true || answerTwo.current === true || answerThree.current === true)) {
-            console.log("check correlation undo screen..")
             if (((corAnswerOne) >= 1.4) && (corAnswerOne>corAnswerTwo) && (corAnswerOne>corAnswerThree))
                         {
-                            console.log("Chosen Change");
                             answerOne.current = false
                             answerTwo.current = false
                             answerThree.current = false
@@ -223,7 +215,6 @@ const EyeVote = (props) => {
                         // If corelation for answer one is over corReference
                         else if (((corAnswerTwo) >= 1.4) && (corAnswerTwo>corAnswerOne) && (corAnswerTwo>corAnswerThree))
                         {
-                            console.log("Chosen Next!!");
                             logData();
                             answerOne.current = false;
                             answerTwo.current = false;
@@ -238,12 +229,10 @@ const EyeVote = (props) => {
         // check correllation
         if ((undoscreen.current === false) && (answerOne.current === false) && (answerTwo.current === false) && (answerThree.current === false))
                     {
-                        console.log("check correlation...")
                         // If correlation for answer one is over corReference
 
                         if (((corAnswerOne) >= 1.4) && (corAnswerOne>corAnswerTwo) && (corAnswerOne>corAnswerThree))
                         {
-                            console.log("Chosen: Answer One");
                             answerOne.current = true
                             corAnswerOne = 0;
                             undoscreen.current = true
@@ -256,7 +245,6 @@ const EyeVote = (props) => {
                         // If correlation for answer two is over corReference
                         else if (((corAnswerTwo) >= 1.4) && (corAnswerTwo>corAnswerOne) && (corAnswerTwo>corAnswerThree))
                         {
-                            console.log("Chosen: Answer Two");
                             answerTwo.current = true;
                             corAnswerTwo = 0;
                             undoscreen.current = true
@@ -269,7 +257,6 @@ const EyeVote = (props) => {
                         // If correlation for answer three is over corReference
                         else if (((corAnswerThree) >= 1.4) && (corAnswerThree>corAnswerOne) && (corAnswerThree>corAnswerTwo))
                         {
-                            console.log("Chosen: Answer Three");
                             answerThree.current = true;
                             corAnswerThree = 0;
                             undoscreen.current = true
@@ -282,10 +269,6 @@ const EyeVote = (props) => {
                     else
                     {
                     }
-        }
-        if (question.current === 11) {
-            console.log("zzzzz")
-            sleep(5000).then(() => question.current = 12)
         }
             empty();
         }, 3000);
@@ -343,7 +326,6 @@ const EyeVote = (props) => {
             question_10: {number: question.current, answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
         }, { merge: true })
     }
-        console.log("Data logged.")
     }
 
 
@@ -408,23 +390,18 @@ const EyeVote = (props) => {
                 <label className='answerOne' id="answerOne">{props.one}</label>
                 <label className='answerTwo' id="answerTwo">{props.two}</label>
                 <label className='answerThree' id="answerThree">{props.three}</label>
-                <button onClick={() =>{answerselected.current = answerProp.current.one; setUndo('1');}}>Done</button>
             </div>
         );
     }
 
     // Undo Screen
     const UndoScreen = (props) => {
-        console.log("Undo screen here hehe")
         return (
             <div className='Eyevote'>
                 <h1 className='question' id="questionPrompt">{props.prompt}</h1>
                 <label className='answerOne' id="answerOne">{props.change}</label>
                 <label className='answerTwo' id="answerTwo">{props.next}</label>
                 <label className='answerTwo' id="answerThree"></label>
-                <button onClick={() => {question.current = question.current+1; setUndo('0')}}>Next</button>
-                <p></p>
-                <button onClick={() => setUndo('0')}>Change</button>
             </div>
         );
     }
@@ -446,7 +423,6 @@ const EyeVote = (props) => {
     return (
             <div>
              {questionNumber()}
-             <div className='dot' id='dotLookAt'></div>
             </div>
     )
 }

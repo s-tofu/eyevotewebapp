@@ -28,7 +28,6 @@ const PostStudy = (props) => {
           instructionserr = " * Please select an option."
         }
         if(distractionerr || difficultyerr || instructionserr) {
-          console.log("here is false")
           setDistractionError(distractionerr)
           setDifficultyError(difficultyerr)
           setInstructionsError(instructionserr)

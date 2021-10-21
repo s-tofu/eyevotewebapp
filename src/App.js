@@ -132,7 +132,6 @@ function App() {
       remotestudyerr = " * Please select an option."
     }
     if(ageerr || gendererr || remotestudyerr || experienceerr) {
-      console.log("here is false")
       setAgeError(ageerr)
       setGenderError(gendererr)
       setRemotestudyError(remotestudyerr)
@@ -145,7 +144,6 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     isValid.current = validate()
-    console.log(isValid.current)
     if (isValid.current) {
       db.collection('studyfiles').add({
         timestamp: firebase.firestore.Timestamp.now(),
@@ -157,7 +155,7 @@ function App() {
       })
       .then(function(docRef) {
         log_id.current = docRef.id
-        alert("Form has been submitted. ID: " + log_id.current );
+        alert("Question form has been submitted");
         setPage('eyevote')
       })
       .catch((error) => {
