@@ -10,10 +10,6 @@ function App() {
   
   const log_id = useRef("");
   const [page, setPage] = useState('home')
-  const toPage = (page) => (event) => {
-    event.preventDefault()
-    setPage(page)
-  }
 
   const content = () => {
     if (page === 'consent') {
@@ -38,9 +34,10 @@ function App() {
         </p>
         <p className="body">For this study you will need:
         <ol className='body' style={{ listStyleType: "decimal" }}>
-          <li>a desktop or a laptop with a webcam. A webcam is needed to track your eyes.</li>
-          <li>to sit in a quiet and bright room.</li>
-          <li>please don't have a direct light pointing at the webcam or at your back.</li>
+          <li>A desktop or a laptop with a webcam. A webcam is needed to track your eyes.</li>
+          <li>To sit in a quiet and bright room.</li>
+          <li>Please don't have a direct light pointing at the webcam or at your back.</li>
+          <li>Please set your browser size to fullscreen-mode now. (A very common shortcut is the F11 key) This helps you to not get distracted. </li>
         </ol>
         </p>
         <p className="body">Once the study starts, you will be asked 10 questions and will gaze at the moving answers that you want to select. The questions will only include neutral and personal questions where there is
@@ -122,7 +119,6 @@ function App() {
     let gendererr = ""
     let experienceerr = ""
     let remotestudyerr = ""
-    let screensizeerr = ""
     if(isNaN(age) || age.length === 0) {
       ageerr = " * Age has to be a number. E.g. 56";
     }
@@ -158,8 +154,6 @@ function App() {
         experience: experience,
         remotestudy: remotestudy,
         start_time: firebase.firestore.Timestamp.now(),
-        gazedata: [],
-        labeldata: []
       })
       .then(function(docRef) {
         log_id.current = docRef.id
@@ -211,9 +205,9 @@ function App() {
                 </label>
             <p><p className='question_title'>Reminder: 
             </p>
-            <p className='reminder'>By clicking on "Start eye-tracking", we will start the Study. You will first be asked to calibrate the webcam eyetracker.
+            <p className='reminder'>Please set your browser size to fullscreen-mode. (A very common shortcut is the F11 key) This will avoid you getting distracted. <p></p>By clicking on "Start eye-tracking", we will start the Study. You will first be asked to calibrate the webcam eyetracker.
                 Please follow the instructions of the calibration and continue with the study afterwards.<p></p> Once the study starts, you will be asked 10 questions and will gaze at the moving answers that you want to select. The questions will only include neutral and personal questions where there is
-          no right or wrong. E.g. “Which ice cream flavor would you choose? Vanilla, Chocolate or Strawberry.” You will be able to undo your answer selection if you want to repeat the question. If you see your video stream popping up at the top left corner, please make sure you are correctly looking at the screen.</p>
+          no right or wrong. E.g. “Which ice cream flavor would you choose? Vanilla, Chocolate or Strawberry.” You will be able to undo your answer selection if you want to repeat the question.<p></p>If you see your video stream popping up at the top left corner, please make sure you are correctly looking at the screen.</p>
             </p>
             <button className="button" type="submit">Start</button>
             </form>

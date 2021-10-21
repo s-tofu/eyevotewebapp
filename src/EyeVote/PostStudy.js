@@ -1,12 +1,10 @@
 import React, {useRef, useState} from 'react'
 import Header from '../Header'
 import {db} from '../firebase';
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
 const PostStudy = (props) => {
-    console.log("Heya Post Study")
-    const id = useRef("KJEM0Zw50JO0vvF2yXuP")
+    const id = useRef(props.id)
     const isValid = useRef(false)
     const [distraction, setDistraction] = useState('')
     const [distractionError, setDistractionError] = useState('')
