@@ -47,8 +47,9 @@
     font-size: 6vh;
     margin: 20pt;
     top: 600px;
-    left: 1300px;
+    left: 1200px;
     animation: zigzag 15s linear infinite;
+    animation-direction: alternate;
 }
 
 .answerThree {
@@ -66,17 +67,21 @@
 
 @keyframes diagonal {
     from {top: 250px; left: 1200px}
-    to {top: 700px; left: 700px}
+    to {top: 500px; left: 700px}
   }
 
 @keyframes circular {
-    from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
-    to   { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+    from { transform: rotate(0deg) translateX(180px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(180px) rotate(-360deg); }
 }
 
 @keyframes zigzag {
-    from {top: 700px; left:1300px}
-    to {top: 700px; left: 200px}
+    0% {top: 700px; left:1300px}
+    20% {top: 600px; left: 1100px}
+    40% {top: 700px; left: 900px}
+    60% {top:600px; left: 700px}
+    80% {top:700px; left: 500px}
+    100% {top:600px; left: 300px}
 }
 
 .eyevotebutton {

@@ -4,6 +4,6 @@ import App from './App';
 import EyeVote from './EyeVote/Eyevote.js';
 
 ReactDOM.render(
-  <App />,
+  <EyeVote />,
   document.getElementById('root')
 )
