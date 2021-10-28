@@ -30,7 +30,7 @@ function App() {
         <Header></Header>
         <h1 className="title">Remote Eye-Tracking Study: EyeVote
         </h1>
-        <p className="body">First of all, thank you for your interest in my Bachelor Thesis study “Remote Eye-Tracking Studies: challenges and opportunities of conducting eye-tracking studies out of the lab”. The aim of this study is to collect eyegaze data from the user.
+        <p className="body">First of all, thank you for your interest in my Bachelor Thesis study “Remote Eye-Tracking Studies: challenges and opportunities of conducting eye-tracking studies out of the lab”. The aim of this study is to collect eyegaze data from the user to compare the gaze accuracy with a lab study.
         </p>
         <p className="body">For this study you will need:
         <ol className='body' style={{ listStyleType: "decimal" }}>

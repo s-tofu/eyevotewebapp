@@ -3,7 +3,7 @@ import './Eyevote.css'
 import {db} from '../firebase';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-import PostStudy from './PostStudy.js'
+import AccuracyTest from './AccuracyTest';
 
 const EyeVote = (props) => {
     // Attributes
@@ -57,9 +57,9 @@ const EyeVote = (props) => {
     var gaze_time
 
     // correlations of labels
-    var corAnswerOne
-    var corAnswerTwo
-    var corAnswerThree
+    const corAnswerOne = useRef()
+    const corAnswerTwo = useRef()
+    const corAnswerThree = useRef()
     var corAnswerOne_x
     var corAnswerOne_y
     var corAnswerTwo_x
@@ -68,16 +68,16 @@ const EyeVote = (props) => {
     var corAnswerThree_y
 
     //On Load 
-    const id = useRef(props.id)
-    const logLabelPositionOne_x = [];
-    const logLabelPositionOne_y= [];
-    const logLabelPositionTwo_x = []; 
-    const logLabelPositionTwo_y = [];
-    const logLabelPositionThree_x = [];
-    const logLabelPositionThree_y = [];
-    const logGazePosition_x = [];
-    const logGazePosition_y = [];
-    const logGazeTime = [];
+    const id = useRef("6Ahzm8JFVACS6Lrwwpk0")
+    const logLabelPositionOne_x = useRef([]);
+    const logLabelPositionOne_y= useRef([]);
+    const logLabelPositionTwo_x = useRef([]); 
+    const logLabelPositionTwo_y = useRef([]);
+    const logLabelPositionThree_x = useRef([]);
+    const logLabelPositionThree_y = useRef([]);
+    const logGazePosition_x = useRef([]);
+    const logGazePosition_y = useRef([]);
+    const logGazeTime = useRef([]);
 
     // Conditional Question State control
     const questionNumber = () => {
@@ -86,7 +86,7 @@ const EyeVote = (props) => {
         } else if (question.current === 0){
             return(SecondScreen({header: "EyeVote Remote"}));} 
         else if(question.current > 11) {
-            return <PostStudy id={id.current}/>
+            return <AccuracyTest id={id.current}/>
         }
         else if (undo === '1'){
             // render the UndoScreen
@@ -172,58 +172,64 @@ const EyeVote = (props) => {
         answerThree_y = answerThree_rect.top;
 
         // constantly push the positions into the position arrays
-        logLabelPositionOne_x.push(answerOne_x);
-        logLabelPositionOne_y.push(answerOne_y);
-        logLabelPositionTwo_x.push(answerTwo_x)
-        logLabelPositionTwo_y.push(answerTwo_y)
-        logLabelPositionThree_x.push(answerThree_x)
-        logLabelPositionThree_y.push(answerThree_y)
-        logGazePosition_x.push(gaze_x)
-        logGazePosition_y.push(gaze_y)
-        logGazeTime.push(gaze_time)
+        logLabelPositionOne_x.current.push(answerOne_x);
+        logLabelPositionOne_y.current.push(answerOne_y);
+        logLabelPositionTwo_x.current.push(answerTwo_x)
+        logLabelPositionTwo_y.current.push(answerTwo_y)
+        logLabelPositionThree_x.current.push(answerThree_x)
+        logLabelPositionThree_y.current.push(answerThree_y)
+        logGazePosition_x.current.push(gaze_x)
+        logGazePosition_y.current.push(gaze_y)
+        logGazeTime.current.push(gaze_time)
 
         // calculate the correlation
-        corAnswerOne_x = calculateCorrelation(logLabelPositionOne_x, logGazePosition_x);
-        corAnswerOne_y = calculateCorrelation(logLabelPositionOne_y, logGazePosition_y);
-        corAnswerTwo_x = calculateCorrelation(logLabelPositionTwo_x, logGazePosition_x);
-        corAnswerTwo_y = calculateCorrelation(logLabelPositionTwo_y, logGazePosition_y);
-        corAnswerThree_x = calculateCorrelation(logLabelPositionThree_x, logGazePosition_x);
-        corAnswerThree_y = calculateCorrelation(logLabelPositionThree_y, logGazePosition_y);
+        corAnswerOne_x = calculateCorrelation(logLabelPositionOne_x.current, logGazePosition_x.current);
+        corAnswerOne_y = calculateCorrelation(logLabelPositionOne_y.current, logGazePosition_y.current);
+        corAnswerTwo_x = calculateCorrelation(logLabelPositionTwo_x.current, logGazePosition_x.current);
+        corAnswerTwo_y = calculateCorrelation(logLabelPositionTwo_y.current, logGazePosition_y.current);
+        corAnswerThree_x = calculateCorrelation(logLabelPositionThree_x.current, logGazePosition_x.current);
+        corAnswerThree_y = calculateCorrelation(logLabelPositionThree_y.current, logGazePosition_y.current);
 
-        corAnswerOne = corAnswerOne_x + corAnswerOne_y;
-        corAnswerTwo = corAnswerTwo_x + corAnswerTwo_y;
-        corAnswerThree = corAnswerThree_x + corAnswerThree_y;
+        corAnswerOne.current = corAnswerOne_x + corAnswerOne_y;
+        corAnswerTwo.current = corAnswerTwo_x + corAnswerTwo_y;
+        corAnswerThree.current = corAnswerThree_x + corAnswerThree_y;
     }
 
     useEffect(() => {
         // clear for tracking intervall
         const interval = setInterval(() => {
-            if (calibrationDone.current === true) {
+        if (calibrationDone.current === true) {
         if ((undoscreen.current===true) && (answerOne.current === true || answerTwo.current === true || answerThree.current === true)) {
-            if (((corAnswerOne) >= 1.4) && (corAnswerOne>corAnswerTwo) && (corAnswerOne>corAnswerThree))
+            if (((corAnswerOne.current) >= 1.4) && (corAnswerOne.current>corAnswerTwo.current) && (corAnswerOne.current>corAnswerThree.current))
                         {
                             answerOne.current = false
                             answerTwo.current = false
                             answerThree.current = false
-                            corAnswerOne = 0;
                             empty()
                             undoscreen.current = false
-                            setUndo('0')
+                            corAnswerOne.current = 0;
+                            setTimeout(function(){ 
+                                console.log("Timeout over")
+                                setUndo('0')
+                             }, 1000);
 
                         }
 
                         // If corelation for answer one is over corReference
-                        else if (((corAnswerTwo) >= 1.4) && (corAnswerTwo>corAnswerOne) && (corAnswerTwo>corAnswerThree))
+                        else if (((corAnswerTwo.current) >= 1.4) && (corAnswerTwo.current>corAnswerOne.current) && (corAnswerTwo.current>corAnswerThree.current))
                         {
                             logData();
                             answerOne.current = false;
                             answerTwo.current = false;
                             answerThree.current = false;
                             undoscreen.current = false
-                            corAnswerTwo = 0;
-                            question.current = question.current + 1 
+                            question.current = question.current + 1
                             empty()
-                            setUndo('0')
+                            corAnswerTwo.current = 0;
+                            setTimeout(function(){ 
+                                console.log("Timeout over")
+                                setUndo('0')
+                             }, 1000);
                         }
         }
         // check correllation
@@ -231,38 +237,38 @@ const EyeVote = (props) => {
                     {
                         // If correlation for answer one is over corReference
 
-                        if (((corAnswerOne) >= 1.4) && (corAnswerOne>corAnswerTwo) && (corAnswerOne>corAnswerThree))
+                        if (((corAnswerOne.current) >= 1.4) && (corAnswerOne.current>corAnswerTwo.current) && (corAnswerOne.current>corAnswerThree.current))
                         {
                             answerOne.current = true
-                            corAnswerOne = 0;
                             undoscreen.current = true
                             answerselected.current = answerProp.current.one
-                            logselected_gaze.current = {gaze_x: logGazePosition_x, gaze_y: logGazePosition_y, gaze_time: logGazeTime}
-                            logselected_label.current = {label_x: logLabelPositionOne_x, label_y: logLabelPositionOne_y, label_time: logGazeTime}
+                            logselected_gaze.current = {gaze_x: logGazePosition_x.current, gaze_y: logGazePosition_y.current, gaze_time: logGazeTime.current}
+                            logselected_label.current = {label_x: logLabelPositionOne_x.current, label_y: logLabelPositionOne_y.current, label_time: logGazeTime.current}
+                            corAnswerOne.current = 0;
                             setUndo('1')
                         }
 
                         // If correlation for answer two is over corReference
-                        else if (((corAnswerTwo) >= 1.4) && (corAnswerTwo>corAnswerOne) && (corAnswerTwo>corAnswerThree))
+                        else if (((corAnswerTwo.current) >= 1.4) && (corAnswerTwo.current>corAnswerOne.current) && (corAnswerTwo.current>corAnswerThree.current))
                         {
                             answerTwo.current = true;
-                            corAnswerTwo = 0;
                             undoscreen.current = true
                             answerselected.current = answerProp.current.two
-                            logselected_gaze.current = {gaze_x: logGazePosition_x, gaze_y: logGazePosition_y, gaze_time: logGazeTime}
-                            logselected_label.current = {label_x: logLabelPositionTwo_x, label_y: logLabelPositionTwo_y, label_time: logGazeTime}
+                            logselected_gaze.current = {gaze_x: logGazePosition_x.current, gaze_y: logGazePosition_y.current, gaze_time: logGazeTime.current}
+                            logselected_label.current = {label_x: logLabelPositionTwo_x.current, label_y: logLabelPositionTwo_y.current, label_time: logGazeTime.current}
+                            corAnswerTwo.current = 0;
                             setUndo('1')
                         }
 
                         // If correlation for answer three is over corReference
-                        else if (((corAnswerThree) >= 1.4) && (corAnswerThree>corAnswerOne) && (corAnswerThree>corAnswerTwo))
+                        else if (((corAnswerThree.current) >= 1.4) && (corAnswerThree.current>corAnswerOne.current) && (corAnswerThree.current>corAnswerTwo.current))
                         {
                             answerThree.current = true;
-                            corAnswerThree = 0;
                             undoscreen.current = true
                             answerselected.current = answerProp.current.three
-                            logselected_gaze.current = {gaze_x: logGazePosition_x, gaze_y: logGazePosition_y, gaze_time: logGazeTime}
-                            logselected_label.current = {label_x: logLabelPositionTwo_x, label_y: logLabelPositionTwo_y, label_time: logGazeTime}
+                            logselected_gaze.current = {gaze_x: logGazePosition_x.current, gaze_y: logGazePosition_y.current, gaze_time: logGazeTime.current}
+                            logselected_label.current = {label_x: logLabelPositionTwo_x.current, label_y: logLabelPositionTwo_y.current, label_time: logGazeTime.current}
+                            corAnswerThree.current = 0;
                             setUndo('1')
                         }
                     }
@@ -276,54 +282,16 @@ const EyeVote = (props) => {
 
     // log data into firestore
     function logData() {
-    if (question.current === 1) {
+    if (question.current < 10) {
         db.collection("studyfiles").doc(id.current).set( {
-            question_1: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
-        }, { merge: true })
-    }
-    if (question.current === 2) {
-        db.collection("studyfiles").doc(id.current).set( {
-            question_2: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
-        }, { merge: true })
-    }
-    if (question.current === 3) {
-        db.collection("studyfiles").doc(id.current).set( {
-            question_3: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
-        }, { merge: true })
-    }
-    if (question.current === 4) {
-        db.collection("studyfiles").doc(id.current).set( {
-            question_4: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
-        }, { merge: true })
-    }
-    if (question.current === 5) {
-        db.collection("studyfiles").doc(id.current).set( {
-            question_5: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
-        }, { merge: true })
-    }
-    if (question.current === 6) {
-        db.collection("studyfiles").doc(id.current).set( {
-            question_6: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
-        }, { merge: true })
-    }
-    if (question.current === 7) {
-        db.collection("studyfiles").doc(id.current).set( {
-            question_7: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
-        }, { merge: true })
-    }
-    if (question.current === 8) {
-        db.collection("studyfiles").doc(id.current).set( {
-            question_8: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
-        }, { merge: true })
-    }
-    if (question.current === 9) {
-        db.collection("studyfiles").doc(id.current).set( {
-            question_9: {number: question.current, answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
+            [`question_${question.current}`]: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
         }, { merge: true })
     }
     if (question.current === 10) {
         db.collection("studyfiles").doc(id.current).set( {
-            question_10: {number: question.current, answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
+            question_10: {number: question.current, answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current},
+            window_size: toString(window.innerWidth) + ", " + toString(window.innerHeight),
+            end_time: firebase.firestore.Timestamp.now()
         }, { merge: true })
     }
     }
@@ -331,15 +299,15 @@ const EyeVote = (props) => {
 
     // empty arrays
     function empty() {
-        logLabelPositionOne_x.length = 0;
-        logLabelPositionOne_y.length = 0;
-        logLabelPositionTwo_x.length = 0; 
-        logLabelPositionTwo_y.length = 0;
-        logLabelPositionThree_x.length = 0;
-        logLabelPositionThree_y.length = 0;
-        logGazePosition_x.length = 0;
-        logGazePosition_y.length = 0;
-        logGazeTime.length = 0;
+        logLabelPositionOne_x.current.length = 0;
+        logLabelPositionOne_y.current.length = 0;
+        logLabelPositionTwo_x.current.length = 0; 
+        logLabelPositionTwo_y.current.length = 0;
+        logLabelPositionThree_x.current.length = 0;
+        logLabelPositionThree_y.current.length = 0;
+        logGazePosition_x.current.length = 0;
+        logGazePosition_y.current.length = 0;
+        logGazeTime.current.length = 0;
     }
 
     // sleep
@@ -356,11 +324,15 @@ const EyeVote = (props) => {
                 <label className='answerOne' id="answerOne"> </label>
                 <label className='answerTwo' id="answerTwo"> </label>
                 <label className='answerThree' id="answerThree"> </label>
-                 <h1 className='header'>{props.header}</h1>
-                 <p className='instructions'>The study will start with a calibration.<p></p>After calibration you will be presented 10 questions.</p>
-                 <button className='eyevotebutton' onClick={() => {start(); question.current = question.current + 1; setUndo('2')}}>
+                <div className="descriptionBox">
+                <h1 className='titleEyeVote'>{props.header}</h1>
+                 <p className='instructions marginTop'>The study will start with a calibration.<p></p>After calibration you will be presented 10 questions.</p>
+                 <div className="boxCenter">
+                 <button className='eyevotebutton marginTop' onClick={() => {start(); question.current = question.current + 1; setUndo('2')}}>
                      Start Calibration
                  </button>
+                </div>
+                </div>
             </div>
         );
     }
@@ -372,11 +344,15 @@ const EyeVote = (props) => {
                 <label className='answerOne' id="answerOne"> </label>
                 <label className='answerTwo' id="answerTwo"> </label>
                 <label className='answerThree' id="answerThree"> </label>
-                 <h1 className='header'>{props.header}</h1>
-                 <p className='instructions'>Please gaze at the answers you want to select.<p></p>You will be able to undo your answer.</p>
-                 <button className='eyevotebutton' onClick={() => { question.current = question.current + 1; setUndo('3'); calibrationDone.current=true;}}>
+                <div className="descriptionBox">
+                 <h1 className='titleEyeVote'>{props.header}</h1>
+                 <p className='instructions marginTop'>Please gaze at the answers you want to select.<p></p>You will be able to undo your answer.</p>
+                 <div className="boxCenter">
+                 <button className='eyevotebutton marginTop' onClick={() => { question.current = question.current + 1; setUndo('3'); calibrationDone.current=true;}}>
                      Start
                  </button>
+                 </div>
+                 </div>
             </div>
         );
     }
@@ -407,15 +383,20 @@ const EyeVote = (props) => {
     }
 
     const StudyEnd = (props) => {
+        console.log("Ree")
         return (
             <div className='Eyevote'>
                 <label className='answerOne' id="answerOne"> </label>
                 <label className='answerTwo' id="answerTwo"> </label>
                 <label className='answerThree' id="answerThree"> </label>
-                 <p className='instructions'>You have successfully answered all questions.<p></p>We will now continue with an accuracy test.</p>
-                 <button className='eyevotebutton' onClick={() => { question.current = question.current + 1; setUndo('3');}}>
+                <div className="descriptionBox">
+                 <p className='instructions'>You have successfully answered all questions.<p></p>We will now continue with the accuracy test.<p></p>Please look at the white points showing up on the screen.</p>
+                 <div className="boxCenter">
+                 <button className='eyevotebutton marginTop' onClick={() => { question.current = question.current + 1; setUndo('3');}}>
                      Okay
                  </button>
+                 </div>
+                 </div>
             </div>
         );
     }
