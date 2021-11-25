@@ -3,10 +3,10 @@ import './AccuracyTest.css'
 import {db} from '../firebase';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-import PostStudy from './PostStudy'
+import PostStudy from './PostStudy.js';
 
 const AccuracyTest = (props) => {
-    const id = useRef(props.id)
+    const id = useRef("RAeWccio1unb0ui61k6l")
     const counter = useRef(1)
     const canvas = useRef()
     const ctx = useRef()
@@ -15,13 +15,15 @@ const AccuracyTest = (props) => {
     const center_y = useRef()
     const gaze_x = []
     const gaze_y = [] 
-    const [accuracyDone, setAccuracyDone] = useState(false)
+    const accuracyDone = useRef(false)
+    const [update, setUpdate] = useState(0)
 
     const questionNumber = () => {
-        if (accuracyDone === false) {
+        if (accuracyDone.current === false) {
             return(Accuracy());
-          } else if(accuracyDone) {
-              return <PostStudy id={id.current}/>
+          } else if(accuracyDone.current === true) {
+            console.log("accuracy donzo")
+            return <PostStudy id={id.current}/>
           }
     }
 
@@ -31,6 +33,7 @@ const AccuracyTest = (props) => {
     }
 
     useEffect(()=> {
+        if (accuracyDone.current === false) {
         window.GazeCloudAPI.OnResult = PlotAccuracy
         canvas.current = document.getElementById("canvas_circle");
         ctx.current = canvas.current.getContext("2d")
@@ -52,7 +55,7 @@ const AccuracyTest = (props) => {
         setInterval(()=>{
             center_x.current = window.innerWidth*(parseInt(canvas.current.style.left, 10)/100) + ((parseInt(canvas.current.style.width, 10))/2)
             center_y.current = window.innerHeight*(parseInt(canvas.current.style.top, 10)/100) + ((parseInt(canvas.current.style.height, 10))/2)
-            if(counter.current < 9) {
+            if(counter.current < 10) {
                 if(counter.current===3 || counter.current===6){
                     collectAccuracy()
                     shiftCircle(-50,22)
@@ -61,11 +64,8 @@ const AccuracyTest = (props) => {
                     counter.current ++;
                 } else if(counter.current===9) {
                     collectAccuracy()
-                    setTimeout(function(){ 
-                        console.log("Timeout over")
-                        setAccuracyDone(true)
-                     }, 2000);
-
+                    accuracyDone.current = true
+                    setUpdate(1)
                 } else {
                 collectAccuracy()
                 shiftCircle(25,0)
@@ -75,6 +75,7 @@ const AccuracyTest = (props) => {
                 }
             }
         }, 3000)
+    }
     })
 
     function shiftCircle(move_x, move_y) {
@@ -93,7 +94,9 @@ const AccuracyTest = (props) => {
             distance = distance - (30+5);
         }   
         db.collection("studyfiles").doc(id.current).set( {
+            accuracy_data: {
             [`accuracy_circ${counter.current}`]: {gaze_x: gaze_x, gaze_y: gaze_y, distance: distance, center_x:center_x.current, center_y:center_y.current}
+            }
         }, { merge: true })
 
     }

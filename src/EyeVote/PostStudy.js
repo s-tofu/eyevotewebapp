@@ -4,7 +4,7 @@ import {db} from '../firebase';
 import 'firebase/compat/firestore';
 
 const PostStudy = (props) => {
-    const id = useRef(props.id)
+    const id = useRef("RAeWccio1unb0ui61k6l")
     const isValid = useRef(false)
     const [distraction, setDistraction] = useState('')
     const [distractionError, setDistractionError] = useState('')
