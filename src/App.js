@@ -30,14 +30,15 @@ function App() {
         <Header></Header>
         <h1 className="title">Remote Eye-Tracking Study: EyeVote
         </h1>
-        <p className="body">First of all, thank you for your interest in my Bachelor Thesis study “Remote Eye-Tracking Studies: challenges and opportunities of conducting eye-tracking studies out of the lab”. The aim of this study is to collect eyegaze data from the user to compare the gaze accuracy with a lab study.
+        <p className="body">First of all, thank you for your interest in my Bachelor Thesis study “Remote Eye-Tracking Studies: challenges and opportunities of conducting eye-tracking studies out of the lab”.
         </p>
+        <p className="body">The aim of this study is to collect eyegaze data from the user to compare the gaze accuracy with a traditional lab study.</p>
         <p className="body">For this study you will need:
         <ol className='body' style={{ listStyleType: "decimal" }}>
           <li>A desktop or a laptop with a webcam. A webcam is needed to track your eyes.</li>
           <li>To sit in a quiet and bright room.</li>
           <li>Please don't have a direct light pointing at the webcam or at your back.</li>
-          <li>Please set your browser size to fullscreen-mode now. (A very common shortcut is the F11 key) This helps you to not get distracted. </li>
+          <li>Please set your browser size to fullscreen-mode now. (A very common shortcut is the F11 key) This helps you to not get distracted by other tabs. </li>
         </ol>
         </p>
         <p className="body">Once the study starts, you will be asked 10 questions and will gaze at the moving answers that you want to select. The questions will only include neutral and personal questions where there is
@@ -61,7 +62,7 @@ function App() {
           <ol className='body' style={{ listStyleType: "decimal" }}>
               <li>I am aware that the collection, processing and use of my data is voluntary. The study can be cancelled by me at any time without mentioning reasons and without causing meany disadvantages. In the event of cancellation, all data recorded of me will be irrevocably deleted.<p></p></li>
               <li>I agree that my following data are processed:
-                  <ol style={{ listStyleType: "lower-latin" }} >
+                  <ol>
                       <li className='identLi'>demography (age in years, gender, education, job status, technical affinity)</li>
                       <li className='identLi'>my eyetracking data</li>
                       <li className='identLi'>experiences with and attitudes towards various types of technology</li>
@@ -102,12 +103,17 @@ function App() {
   )
   }
 
+  // states for form validation
   const [age, setAge] = useState("")
   const [gender, setGender] = useState("")
+  const [residency, setResidency] = useState("")
+  const [nationality, setNationality] = useState("")
   const [experience, setExperience] = useState("")
   const [remotestudy, setRemoteStudy] = useState("")
   const [ageError, setAgeError] = useState("")
   const [genderError, setGenderError] = useState("")
+  const [residencyError, setResidencyError] = useState("")
+  const [nationalityError, setNationalityError] = useState("")
   const [experienceError, setExperienceError] = useState("")
   const [remotestudyError, setRemotestudyError] = useState("")
   const isValid = useRef(false)
@@ -117,6 +123,8 @@ function App() {
     isValid.current = false
     let ageerr= ""
     let gendererr = ""
+    let residencyerr = ""
+    let nationalityerr = ""
     let experienceerr = ""
     let remotestudyerr = ""
     if(isNaN(age) || age.length === 0) {
@@ -131,9 +139,17 @@ function App() {
     if(remotestudy.length === 0) {
       remotestudyerr = " * Please select an option."
     }
-    if(ageerr || gendererr || remotestudyerr || experienceerr) {
+    if(residency.length === 0) {
+      residencyerr = " * Cannot be empty."
+    }
+    if (nationality.length === 0) {
+      nationalityerr = " * Cannot be empty."
+    }
+    if(ageerr || gendererr || remotestudyerr || experienceerr || residencyerr || nationalityerr) {
       setAgeError(ageerr)
       setGenderError(gendererr)
+      setResidencyError(residencyerr)
+      setNationalityError(nationalityerr)
       setRemotestudyError(remotestudyerr)
       setExperienceError(experienceerr)
       return false;
@@ -149,6 +165,8 @@ function App() {
         timestamp: firebase.firestore.Timestamp.now(),
         age: age,
         gender: gender,
+        residency: residency,
+        nationality: nationality,
         experience: experience,
         remotestudy: remotestudy,
         start_time: firebase.firestore.Timestamp.now(),
@@ -182,6 +200,14 @@ function App() {
                     <input type="radio" value="Prefer-not-to-say" name="gender" onChange={(e) => setGender("Prefer not to say")}/> Prefer not to say<p></p>
                     Prefer to self describe: <input type="text" age="age" onChange={(e) => setGender(e.target.value)} />
                 </label>
+                <label>
+                    <p className='question_title'>What is your country of residency? <text style={{color: 'red'}}>{residencyError}</text></p>
+                    <input type="text" age="age" value={age} onChange={(e) => setResidency(e.target.value)}/>
+                </label>
+                <label>
+                    <p className='question_title'>What is your country of origin? <text style={{color: 'red'}}>{nationalityError}</text></p>
+                    <input type="text" age="age" value={age} onChange={(e) => setNationality(e.target.value)}/>
+                </label>
                 <p></p>
                 <label>
                 <p className='question_title'>How much experience have you had with eye tracking? <text style={{color: 'red'}}>{experienceError}</text></p>
@@ -203,7 +229,7 @@ function App() {
                 </label>
             <p><p className='question_title'>Reminder: 
             </p>
-            <p className='reminder'>Please set your browser size to fullscreen-mode. (A very common shortcut is the F11 key) This will avoid you getting distracted. <p></p>By clicking on "Start eye-tracking", we will start the Study. You will first be asked to calibrate the webcam eyetracker.
+            <p className='reminder'>Please set your browser size to fullscreen-mode. (F11 key or on Mac: Control + Command + F.) This will avoid you getting distracted. <p></p>By clicking on "Start eye-tracking", we will start the Study. You will first be asked to calibrate the webcam eyetracker.
                 Please follow the instructions of the calibration and continue with the study afterwards.<p></p> Once the study starts, you will be asked 10 questions and will gaze at the moving answers that you want to select. The questions will only include neutral and personal questions where there is
           no right or wrong. E.g. “Which ice cream flavor would you choose? Vanilla, Chocolate or Strawberry.” You will be able to undo your answer selection if you want to repeat the question.<p></p>If you see your video stream popping up at the top left corner, please make sure you are correctly looking at the screen.</p>
             </p>

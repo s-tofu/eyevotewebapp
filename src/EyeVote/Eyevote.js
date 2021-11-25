@@ -6,7 +6,6 @@ import 'firebase/compat/firestore';
 import AccuracyTest from './AccuracyTest';
 
 const EyeVote = (props) => {
-    // Attributes
     // import the fn for correlation
     const calculateCorrelation = require("calculate-correlation");
 
@@ -383,7 +382,6 @@ const EyeVote = (props) => {
     }
 
     const StudyEnd = (props) => {
-        console.log("Ree")
         return (
             <div className='Eyevote'>
                 <label className='answerOne' id="answerOne"> </label>
