@@ -199,9 +199,11 @@ const EyeVote = (props) => {
         corAnswerThree_y = calculateCorrelation(logLabelPositionThree_y.current, logGazePosition_y.current);
 
         // calculate correlation
+        if(logGazePosition_x.current.length>10) {
         corAnswerOne.current = corAnswerOne_x + corAnswerOne_y;
         corAnswerTwo.current = corAnswerTwo_x + corAnswerTwo_y;
         corAnswerThree.current = corAnswerThree_x + corAnswerThree_y;
+        }
         // console log: delete later
         console.log("One: " + corAnswerOne.current)
         console.log("Two: " + corAnswerTwo.current)
@@ -226,7 +228,7 @@ const EyeVote = (props) => {
                                 empty()
                                 undoscreen.current = false
                                 corAnswerOne.current = 0
-                                sleep(1000)
+                                sleep(3000)
                                 setUndo('0')
     
                             }
@@ -243,7 +245,7 @@ const EyeVote = (props) => {
                                 question.current = question.current + 1
                                 corAnswerThree.current = 0
                                 empty()
-                                sleep(1000)
+                                sleep(3000)
                                 setUndo('0')
                             }
             }
@@ -257,11 +259,12 @@ const EyeVote = (props) => {
                                 console.log("Answer One: " + corAnswerOne.current)
                                 answerOne.current = true
                                 undoscreen.current = true
-                                answerselected.current = "1: " + answerProp.current.one
+                                answerselected.current = answerProp.current.one
                                 cor_selected.current = corAnswerOne.current
                                 logselected_gaze.current = {gaze_x: logGazePosition_x.current, gaze_y: logGazePosition_y.current, gaze_time: logGazeTime.current}
                                 logselected_label.current = {label_x: logLabelPositionOne_x.current, label_y: logLabelPositionOne_y.current, label_time: logGazeTime.current}
                                 corAnswerOne.current = 0;
+                                sleep(3000)
                                 setUndo('1')
                             }
     
@@ -271,11 +274,12 @@ const EyeVote = (props) => {
                                 console.log("Answer Two: " + corAnswerTwo.current)
                                 answerTwo.current = true;
                                 undoscreen.current = true
-                                answerselected.current = "2: " + answerProp.current.two
+                                answerselected.current = answerProp.current.two
                                 cor_selected.current = corAnswerTwo.current
                                 logselected_gaze.current = {gaze_x: logGazePosition_x.current, gaze_y: logGazePosition_y.current, gaze_time: logGazeTime.current}
                                 logselected_label.current = {label_x: logLabelPositionTwo_x.current, label_y: logLabelPositionTwo_y.current, label_time: logGazeTime.current}
                                 corAnswerTwo.current = 0;
+                                sleep(3000)
                                 setUndo('1')
                             }
     
@@ -285,11 +289,12 @@ const EyeVote = (props) => {
                                 console.log("Answer Three: " + corAnswerThree.current)
                                 answerThree.current = true;
                                 undoscreen.current = true
-                                answerselected.current = "3: " + answerProp.current.three
+                                answerselected.current = answerProp.current.three
                                 cor_selected.current = corAnswerThree.current
                                 logselected_gaze.current = {gaze_x: logGazePosition_x.current, gaze_y: logGazePosition_y.current, gaze_time: logGazeTime.current}
                                 logselected_label.current = {label_x: logLabelPositionTwo_x.current, label_y: logLabelPositionTwo_y.current, label_time: logGazeTime.current}
                                 corAnswerThree.current = 0;
+                                sleep(3000)
                                 setUndo('1')
                             }
                         }

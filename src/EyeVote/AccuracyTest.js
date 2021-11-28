@@ -74,7 +74,7 @@ const AccuracyTest = (props) => {
                 counter.current ++;
                 }
             }
-        }, 3000)
+        }, 5000)
     }
     })
 
@@ -103,7 +103,7 @@ const AccuracyTest = (props) => {
 
     function meanofArray(array) {
         let sum = 0
-        for(let i=0; i>array.length; i++){
+        for(let i=0; i<array.length; i++){
             sum = sum + array[i]
         }
         let mean = sum/array.length
