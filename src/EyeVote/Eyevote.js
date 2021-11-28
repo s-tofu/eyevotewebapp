@@ -59,6 +59,7 @@ const EyeVote = (props) => {
     const corAnswerOne = useRef()
     const corAnswerTwo = useRef()
     const corAnswerThree = useRef()
+    const cor_selected = useRef()
     var corAnswerOne_x
     var corAnswerOne_y
     var corAnswerTwo_x
@@ -167,20 +168,24 @@ const EyeVote = (props) => {
         answerOne_rect = document.getElementById('answerOne').getBoundingClientRect();
         answerTwo_rect = document.getElementById('answerTwo').getBoundingClientRect();
         answerThree_rect = document.getElementById('answerThree').getBoundingClientRect();
-        answerOne_x = answerOne_rect.left;
-        answerOne_y = answerOne_rect.top;
-        answerTwo_x = answerTwo_rect.left;
-        answerTwo_y = answerTwo_rect.top;
-        answerThree_x = answerThree_rect.left;
-        answerThree_y = answerThree_rect.top;
 
-        // constantly push the positions into the position arrays
-        logLabelPositionOne_x.current.push(answerOne_x);
-        logLabelPositionOne_y.current.push(answerOne_y);
+        // calculate the center of Label position
+        answerOne_x = answerOne_rect.left + answerOne_rect.width/2;
+        answerOne_y = answerOne_rect.top + answerOne_rect.height/2;
+        answerTwo_x = answerTwo_rect.left + answerTwo_rect.width/2;
+        answerTwo_y = answerTwo_rect.top + answerTwo_rect.height/2;
+        answerThree_x = answerThree_rect.left + answerThree_rect.width/2;
+        answerThree_y = answerThree_rect.top + answerThree_rect.height/2;
+
+        // push label positions into the arrays
+        logLabelPositionOne_x.current.push(answerOne_x)
+        logLabelPositionOne_y.current.push(answerOne_y)
         logLabelPositionTwo_x.current.push(answerTwo_x)
         logLabelPositionTwo_y.current.push(answerTwo_y)
         logLabelPositionThree_x.current.push(answerThree_x)
         logLabelPositionThree_y.current.push(answerThree_y)
+
+        // push gaze data into the arrays
         logGazePosition_x.current.push(gaze_x)
         logGazePosition_y.current.push(gaze_y)
         logGazeTime.current.push(gaze_time)
@@ -193,16 +198,26 @@ const EyeVote = (props) => {
         corAnswerThree_x = calculateCorrelation(logLabelPositionThree_x.current, logGazePosition_x.current);
         corAnswerThree_y = calculateCorrelation(logLabelPositionThree_y.current, logGazePosition_y.current);
 
-        // only calculate correlation if array is long enough
-        if(logGazePosition_x.current.length>20) {
+        // calculate correlation
         corAnswerOne.current = corAnswerOne_x + corAnswerOne_y;
         corAnswerTwo.current = corAnswerTwo_x + corAnswerTwo_y;
         corAnswerThree.current = corAnswerThree_x + corAnswerThree_y;
-        }
+        // console log: delete later
+        console.log("One: " + corAnswerOne.current)
+        console.log("Two: " + corAnswerTwo.current)
+        console.log("Three: " + corAnswerThree.current)
 
+    }
+
+    useEffect(() => {
+        // clear for tracking intervall
+        const interval = setInterval(() => {
+        // Check if calibration is done
         if (calibrationDone.current === true) {
+            
+            // In case of undo
             if ((undoscreen.current===true) && (answerOne.current === true || answerTwo.current === true || answerThree.current === true)) {
-                if (((corAnswerOne.current) >= 1.4) && (corAnswerOne.current>corAnswerTwo.current) && (corAnswerOne.current>corAnswerThree.current))
+                if (((corAnswerOne.current) >= 1.4) && (corAnswerOne.current>corAnswerThree.current))
                             {
                                 console.log("CHANGE: " + corAnswerOne.current)
                                 answerOne.current = false
@@ -210,28 +225,30 @@ const EyeVote = (props) => {
                                 answerThree.current = false
                                 empty()
                                 undoscreen.current = false
-                                corAnswerOne.current = 0;
+                                corAnswerOne.current = 0
+                                sleep(1000)
                                 setUndo('0')
     
                             }
     
                             // If corelation for answer one is over corReference
-                            else if (((corAnswerThree.current) >= 1.4) && (corAnswerThree.current>corAnswerOne.current) && (corAnswerThree.current>corAnswerTwo.current))
+                if (((corAnswerThree.current) >= 1.4) && (corAnswerThree.current>corAnswerOne.current))
                             {
                                 console.log("NEXT: " + corAnswerThree.current)
                                 logData();
-                                answerOne.current = false;
-                                answerTwo.current = false;
-                                answerThree.current = false;
+                                answerOne.current = false
+                                answerTwo.current = false
+                                answerThree.current = false
                                 undoscreen.current = false
                                 question.current = question.current + 1
+                                corAnswerThree.current = 0
                                 empty()
-                                corAnswerTwo.current = 0;
+                                sleep(1000)
                                 setUndo('0')
                             }
             }
             // check correllation
-            if ((undoscreen.current === false) && (answerOne.current === false) && (answerTwo.current === false) && (answerThree.current === false))
+            else if ((undoscreen.current === false) && (answerOne.current === false) && (answerTwo.current === false) && (answerThree.current === false))
                         {
                             // If correlation for answer one is over corReference
     
@@ -240,7 +257,8 @@ const EyeVote = (props) => {
                                 console.log("Answer One: " + corAnswerOne.current)
                                 answerOne.current = true
                                 undoscreen.current = true
-                                answerselected.current = answerProp.current.one
+                                answerselected.current = "1: " + answerProp.current.one
+                                cor_selected.current = corAnswerOne.current
                                 logselected_gaze.current = {gaze_x: logGazePosition_x.current, gaze_y: logGazePosition_y.current, gaze_time: logGazeTime.current}
                                 logselected_label.current = {label_x: logLabelPositionOne_x.current, label_y: logLabelPositionOne_y.current, label_time: logGazeTime.current}
                                 corAnswerOne.current = 0;
@@ -253,7 +271,8 @@ const EyeVote = (props) => {
                                 console.log("Answer Two: " + corAnswerTwo.current)
                                 answerTwo.current = true;
                                 undoscreen.current = true
-                                answerselected.current = answerProp.current.two
+                                answerselected.current = "2: " + answerProp.current.two
+                                cor_selected.current = corAnswerTwo.current
                                 logselected_gaze.current = {gaze_x: logGazePosition_x.current, gaze_y: logGazePosition_y.current, gaze_time: logGazeTime.current}
                                 logselected_label.current = {label_x: logLabelPositionTwo_x.current, label_y: logLabelPositionTwo_y.current, label_time: logGazeTime.current}
                                 corAnswerTwo.current = 0;
@@ -266,7 +285,8 @@ const EyeVote = (props) => {
                                 console.log("Answer Three: " + corAnswerThree.current)
                                 answerThree.current = true;
                                 undoscreen.current = true
-                                answerselected.current = answerProp.current.three
+                                answerselected.current = "3: " + answerProp.current.three
+                                cor_selected.current = corAnswerThree.current
                                 logselected_gaze.current = {gaze_x: logGazePosition_x.current, gaze_y: logGazePosition_y.current, gaze_time: logGazeTime.current}
                                 logselected_label.current = {label_x: logLabelPositionTwo_x.current, label_y: logLabelPositionTwo_y.current, label_time: logGazeTime.current}
                                 corAnswerThree.current = 0;
@@ -274,12 +294,12 @@ const EyeVote = (props) => {
                             }
                         }
             }
+            else {
+                answerOne.current = false;
+                answerTwo.current = false;
+                answerThree.current = false;
+            }
 
-    }
-
-    useEffect(() => {
-        // clear for tracking intervall
-        const interval = setInterval(() => {
             empty();
         }, 3000);
     },)
@@ -289,21 +309,21 @@ const EyeVote = (props) => {
     if (question.current < 10) {
         db.collection("studyfiles").doc(id.current).set( {
             question_data: {
-            [`question_${question.current}`]: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
+            [`question_${question.current}`]: {answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current, correlation: cor_selected.current}
             }
         }, { merge: true })
     }
     if (question.current === 10) {
         db.collection("studyfiles").doc(id.current).set( {
             question_data: {
-            question_10: {number: question.current, answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current}
+            question_10: {number: question.current, answerselected: answerselected.current, gaze: logselected_gaze.current, label: logselected_label.current, correlation: cor_selected.current}
             },
-            window_size: toString(window.innerWidth) + ", " + toString(window.innerHeight),
+            window_height: window.innerHeight,
+            window_width: window.innerWidth,
             end_time: firebase.firestore.Timestamp.now()
         }, { merge: true })
     }
     }
-
 
     // empty arrays
     function empty() {
@@ -320,6 +340,12 @@ const EyeVote = (props) => {
         corAnswerOne.current = 0;
         corAnswerThree.current = 0;
     }
+
+    function sleep(duration) {
+        return new Promise((resolve) => {
+           setTimeout(resolve, duration)
+        })
+     }
 
 
     // First screen 
