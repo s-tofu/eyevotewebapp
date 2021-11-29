@@ -33,19 +33,19 @@ function App() {
         <p className="body">First of all, thank you for your interest in my Bachelor Thesis study “Remote Eye-Tracking Studies: challenges and opportunities of conducting eye-tracking studies out of the lab”.
         </p>
         <p className="body">The aim of this study is to collect eyegaze data from the user to compare the gaze accuracy with a traditional lab study.</p>
-        <p className="body">For this study you will need:
-        <ol className='body' style={{ listStyleType: "decimal" }}>
-          <li>A desktop or a laptop with a webcam. A webcam is needed to track your eyes.</li>
-          <li>To sit in a quiet and bright room.</li>
-          <li>Please don't have a direct light pointing at the webcam or at your back.</li>
-          <li>Please set your browser size to fullscreen-mode now. (A very common shortcut is the F11 key) This helps you to not get distracted by other tabs. </li>
-        </ol>
+        <p className="body">This study will take approximately 15 minutes.
         </p>
         <p className="body">Once the study starts, you will be asked 10 questions and will gaze at the moving answers that you want to select. The questions will only include neutral and personal questions where there is
           no right or wrong. E.g. “Which ice cream flavor would you choose? Vanilla, Chocolate or Strawberry.” You will be able to undo your answer selection if you want to repeat the question.</p>
-        <p className="body">This study will take approximately 15 minutes.
+          <p className="body">Preperation:
+        <ol className='body' style={{ listStyleType: "decimal" }}>
+          <li>You need a desktop or a laptop with a webcam. A webcam is needed to track your eyegaze.</li>
+          <li>Sit in a quiet and bright room.</li>
+          <li>Please don't have a direct light pointing at the webcam or near your head. This will irritate the eye tracking.</li>
+          <li>Please set your browser size to fullscreen-mode now. (A very common shortcut is the F11 key or on Mac: Control + Command + F) This helps you to not get distracted by other tabs. </li>
+        </ol>
         </p>
-        <p className="body">After clicking "Continue", you will be led to the Consent Form first. We would then like to ask you to answer some demographic questions.
+        <p className="body">After clicking "Continue", you will be led to the Consent Form first.
         </p>
         <button className="start-button" onClick={()=> setPage('consent')}>
             Continue
@@ -87,10 +87,7 @@ function App() {
                 <p></p>
               </li>
               <li>
-              I am aware that according to the General Data Protection Regulation (GDPR) I have a right to information about my personal data stored at the University server. For this purpose, I was also given an information sheet on data protection with further information. Because of this information and any further explanations, I can contact the study supervisor by post ore-mail
-                  <p>Phuong Khanh Huynh</p>
-                  <p>khanh.huynh@campus.lmu.de</p>
-                  <p></p>
+              I am aware that according to the General Data Protection Regulation (GDPR) I have a right to information about my personal data stored at the University server. For this purpose, I was also given an information sheet on data protection with further information. Because of this information and any further explanations, I can contact the study supervisor by e-mail: khanh.huynh@campus.lmu.de
               </li>
           </ol>
           <button className='button-consent' onClick={()=>setPage('questions')}>
@@ -108,12 +105,14 @@ function App() {
   const [gender, setGender] = useState("")
   const [residency, setResidency] = useState("")
   const [nationality, setNationality] = useState("")
+  const [vision, setVision] = useState("")
   const [experience, setExperience] = useState("")
   const [remotestudy, setRemoteStudy] = useState("")
   const [ageError, setAgeError] = useState("")
   const [genderError, setGenderError] = useState("")
   const [residencyError, setResidencyError] = useState("")
   const [nationalityError, setNationalityError] = useState("")
+  const [visionError, setVisionError] = useState("")
   const [experienceError, setExperienceError] = useState("")
   const [remotestudyError, setRemotestudyError] = useState("")
   const isValid = useRef(false)
@@ -127,6 +126,7 @@ function App() {
     let nationalityerr = ""
     let experienceerr = ""
     let remotestudyerr = ""
+    let visionerr = ""
     if(isNaN(age) || age.length === 0) {
       ageerr = " * Age has to be a number. E.g. 56";
     }
@@ -145,13 +145,17 @@ function App() {
     if (nationality.length === 0) {
       nationalityerr = " * Cannot be empty."
     }
-    if(ageerr || gendererr || remotestudyerr || experienceerr || residencyerr || nationalityerr) {
+    if (vision.length === 0) {
+      visionerr = " * Please select an option"
+    }
+    if(ageerr || gendererr || remotestudyerr || experienceerr || residencyerr || nationalityerr || visionerr) {
       setAgeError(ageerr)
       setGenderError(gendererr)
       setResidencyError(residencyerr)
       setNationalityError(nationalityerr)
       setRemotestudyError(remotestudyerr)
       setExperienceError(experienceerr)
+      setVisionError(visionerr)
       return false;
     }
       return true;
@@ -169,11 +173,12 @@ function App() {
         nationality: nationality,
         experience: experience,
         remotestudy: remotestudy,
-        start_time: firebase.firestore.Timestamp.now(),
+        vision: vision,
+        demographic_sent: firebase.firestore.Timestamp.now(),
       })
       .then(function(docRef) {
         log_id.current = docRef.id
-        alert("Question form has been submitted");
+        alert("Demographic Form has been submitted");
         setPage('eyevote')
       })
       .catch((error) => {
@@ -199,6 +204,13 @@ function App() {
                     <input type="radio" value="Non-binary" name="gender" onChange={(e) => setGender("Non-binary")}/> Non-binary<p></p>
                     <input type="radio" value="Prefer-not-to-say" name="gender" onChange={(e) => setGender("Prefer not to say")}/> Prefer not to say<p></p>
                     Prefer to self describe: <input type="text" age="age" onChange={(e) => setGender(e.target.value)} />
+                </label>
+                <label>
+                <p className='question_title'>Vision: Are you wearing glasses or contact lenses? <text style={{color: 'red'}}>{visionError}</text></p>
+                <input type="radio" value="None" name="vision" onChange={(e) => setVision("None")}/> None<p></p>
+                    <input type="radio" value="Glasses" name="vision" onChange={(e) => setVision("Glasses")}/> Glasses<p></p>
+                    <input type="radio" value="Contact-lenses" name="vision" onChange={(e) => setVision("Contact lenses")}/> Contact lenses<p></p>
+                    <input type="radio" value="Prefer-not-to-say" name="vision" onChange={(e) => setVision("Prefer not to say")}/> Prefer not to say<p></p>
                 </label>
                 <label>
                     <p className='question_title'>What is your country of residency? <text style={{color: 'red'}}>{residencyError}</text></p>

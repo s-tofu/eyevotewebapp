@@ -73,7 +73,7 @@ const PostStudy = (props) => {
                 }
             }, { merge: true })
           .then(function(docRef) {
-            alert("Thank you for your participation. You can now close your browser.");
+            alert("You can now close your browser. Thank you for your participation :)");
           })
           .catch((error) => {
             alert(error.message);

@@ -358,7 +358,7 @@ const EyeVote = (props) => {
                 <label className='answerThree' id="answerThree"> </label>
                 <div className="descriptionBox">
                 <h1 className='titleEyeVote'>{props.header}</h1>
-                 <p className='instructions marginTop'>The study will start with a calibration.<p></p>After calibration you will be presented 10 questions.</p>
+                 <p className='instructions marginTop'>The study will start with a calibration.<p></p>Please follow the instructions.</p>
                  <div className="boxCenter">
                  <button className='eyevotebutton marginTop' onClick={() => {start(); question.current = question.current + 1; setUndo('2')}}>
                      Start Calibration
@@ -378,7 +378,7 @@ const EyeVote = (props) => {
                 <label className='answerThree' id="answerThree"> </label>
                 <div className="descriptionBox">
                  <h1 className='titleEyeVote'>{props.header}</h1>
-                 <p className='instructions marginTop'>Please gaze at the answers you want to select.<p></p>You will be able to undo your answer.</p>
+                 <p className='instructions marginTop'>You will be asked 10 questions now.<p></p>Select an answer by following its movement with your gaze.</p>
                  <div className="boxCenter">
                  <button className='eyevotebutton marginTop' onClick={() => { question.current = question.current + 1; setUndo('3'); calibrationDone.current=true;}}>
                      Start
@@ -421,7 +421,7 @@ const EyeVote = (props) => {
                 <label className='answerTwo' id="answerTwo"> </label>
                 <label className='answerThree' id="answerThree"> </label>
                 <div className="descriptionBox">
-                 <p className='instructions'>You have successfully answered all questions.<p></p>We will now continue with the accuracy test.<p></p>Please look at the black dot inside the circles showing up on the screen.</p>
+                 <p className='instructions'>You have successfully answered all questions.<p></p>We will now continue with the accuracy test.<p></p>Please look at the black center inside the white circles showing up on the screen.</p>
                  <div className="boxCenter">
                  <button className='eyevotebutton marginTop' onClick={() => { question.current = question.current + 1; setUndo('3');}}>
                      Okay
