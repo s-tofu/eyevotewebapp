@@ -22,7 +22,6 @@ const AccuracyTest = (props) => {
         if (accuracyDone.current === false) {
             return(Accuracy());
           } else if(accuracyDone.current === true) {
-            console.log("accuracy donzo")
             return <PostStudy id={id.current}/>
           }
     }
