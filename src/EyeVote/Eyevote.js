@@ -21,7 +21,7 @@ const EyeVote = (props) => {
         two:"No", 
         three:"I don't remember"
     }
-    const answerselected = useRef("")
+    const answerselected = useRef(props.id)
     const logselected_gaze = useRef({})
     const logselected_label = useRef({})
     const calibrationDone = useRef(false)
@@ -68,7 +68,7 @@ const EyeVote = (props) => {
     var corAnswerThree_y
 
     //On Load 
-    const id = useRef(props.id)
+    const id = useRef("test")
     const logLabelPositionOne_x = [];
     const logLabelPositionOne_y= [];
     const logLabelPositionTwo_x = []; 
@@ -151,6 +151,8 @@ const EyeVote = (props) => {
 
     // Handle Gaze results
     function PlotGaze(result) {
+        document.getElementById('dotLookAt').style.left =`${result.docX}px`;
+        document.getElementById('dotLookAt').style.top =`${result.docY}px`;
 
         gaze_x = result.docX;
         gaze_y = result.docY;
@@ -225,7 +227,6 @@ const EyeVote = (props) => {
                                 undoscreen.current = false
                                 corAnswerOne = 0
                                 setTimeout(function(){ 
-                                    console.log("Timeout over")
                                     setUndo('0')
                                  }, 1000);
     
@@ -244,7 +245,6 @@ const EyeVote = (props) => {
                                 corAnswerThree = 0
                                 empty()
                                 setTimeout(function(){ 
-                                    console.log("Timeout over")
                                     setUndo('0')
                                  }, 1000);
                             }
@@ -265,7 +265,6 @@ const EyeVote = (props) => {
                                 logselected_label.current = {label_x: logLabelPositionOne_x, label_y: logLabelPositionOne_y, label_time: logGazeTime}
                                 corAnswerOne = 0;
                                 setTimeout(function(){ 
-                                    console.log("Timeout over")
                                     setUndo('1')
                                  }, 1000);
                             }
@@ -282,7 +281,6 @@ const EyeVote = (props) => {
                                 logselected_label.current = {label_x: logLabelPositionTwo_x, label_y: logLabelPositionTwo_y, label_time: logGazeTime}
                                 corAnswerTwo = 0;
                                 setTimeout(function(){ 
-                                    console.log("Timeout over")
                                     setUndo('1')
                                  }, 1000);
                             }
@@ -299,7 +297,6 @@ const EyeVote = (props) => {
                                 logselected_label.current = {label_x: logLabelPositionTwo_x, label_y: logLabelPositionTwo_y, label_time: logGazeTime}
                                 corAnswerThree = 0;
                                 setTimeout(function(){ 
-                                    console.log("Timeout over")
                                     setUndo('1')
                                  }, 1000);
                             }
@@ -309,7 +306,7 @@ const EyeVote = (props) => {
             }
 
             empty();
-        }, 3000);
+        }, 2000);
     },)
 
     // log data into firestore
@@ -439,6 +436,7 @@ const EyeVote = (props) => {
     return (
             <div>
              {questionNumber()}
+             <div className='dot' id='dotLookAt'></div>
             </div>
     )
 }
