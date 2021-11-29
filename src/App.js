@@ -202,11 +202,11 @@ function App() {
                 </label>
                 <label>
                     <p className='question_title'>What is your country of residency? <text style={{color: 'red'}}>{residencyError}</text></p>
-                    <input type="text" age="age" value={age} onChange={(e) => setResidency(e.target.value)}/>
+                    <input type="text" age="age" value={residency} onChange={(e) => setResidency(e.target.value)}/>
                 </label>
                 <label>
                     <p className='question_title'>What is your country of origin? <text style={{color: 'red'}}>{nationalityError}</text></p>
-                    <input type="text" age="age" value={age} onChange={(e) => setNationality(e.target.value)}/>
+                    <input type="text" age="age" value={nationality} onChange={(e) => setNationality(e.target.value)}/>
                 </label>
                 <p></p>
                 <label>

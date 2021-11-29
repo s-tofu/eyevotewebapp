@@ -6,7 +6,7 @@ import 'firebase/compat/firestore';
 import PostStudy from './PostStudy.js';
 
 const AccuracyTest = (props) => {
-    const id = useRef("RAeWccio1unb0ui61k6l")
+    const id = useRef(props.id)
     const counter = useRef(1)
     const canvas = useRef()
     const ctx = useRef()
