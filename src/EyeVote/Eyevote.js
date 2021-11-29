@@ -68,7 +68,7 @@ const EyeVote = (props) => {
     var corAnswerThree_y
 
     //On Load 
-    const id = useRef(props.id)
+    const id = useRef("D793bh0Lt21xyeFuRQ4z")
     const logLabelPositionOne_x = [];
     const logLabelPositionOne_y= [];
     const logLabelPositionTwo_x = []; 
