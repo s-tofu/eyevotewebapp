@@ -305,7 +305,7 @@ const EyeVote = (props) => {
             }
 
             empty();
-        }, 3000);
+        }, 2000);
     },)
 
     // log data into firestore
