@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# EyeVote Remote Web Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a web application with the study task of EyeVote. 
 
 ## Available Scripts
 
